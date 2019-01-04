@@ -1,0 +1,51 @@
+{
+  "simulation" : {
+    "time-step" : 0.005,
+    "steer-step" : 1,
+    "save-step" : 10,
+    "humidity" : 0.5,
+    "temperature" : 293,
+    "pressure" : 101325,
+    "wind" : [0, 0, 0]
+  },
+
+  "rocket" : {
+    "flight_control" : {
+      "altitude" : null,
+      "proportional_regulation" : 1,
+      "differential_regulation" : 1,
+      "react_angle" : 0.03490658503,
+      "start_steer" : 1,
+      "start_dive" : 0
+    },
+    "mass" : {
+      "total" : 1,
+      "change" : -0.001,
+      "fuel" : 0.5
+    },
+    "drag_coefficient" : 0.05,
+    "direction" : {
+      "angle": null,
+      "xyz" : [ 0.0, 1.0, 0.0 ]
+    },
+    "surface" : {
+      "side" : 1.0,
+      "front" : 0.1
+    },
+    "thrust" : {
+      "f0" : 100,
+      "change" : 1
+    }
+  },
+
+  "targets" : {
+    "0" : {
+      "radius": 10,
+      "s": [1000, 10, 0],
+      "s.": [0, 0, 0],
+      "s.max": null,
+      "s..": [0, 0, 0]
+    }
+  }
+
+}

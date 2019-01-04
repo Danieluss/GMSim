@@ -126,11 +126,11 @@ class SimplePhysicsObject:
         self.position = np.asarray([0, 0, 0])
 
     def update(self, time):
-        if self.max_velocity != None:
-            if self.max_velocity <= self.velocity + self.acceleration * time:
-                self.acceleration = (self.max_velocity - self.velocity) / time
         self.position = self.position + self.velocity * time + self.acceleration * square(time) * 0.5
         self.velocity = self.velocity + self.acceleration * time
+        # if self.max_velocity is not None:
+        #     if self.max_velocity <= vector_length(self.velocity):
+        #         self.velocity = self.velocity * (self.max_velocity / vector_length(self.velocity))
 
 
 def opposite_vector(vector):
@@ -180,7 +180,7 @@ class Rocket(SimplePhysicsObject):
         self.torque = None
         self.proportional_regulation = 1
         self.differential_regulation = 0
-        self.wind_force = np.array([0, 0, 0])
+        self.wind_velocity = np.array([0, 0, 0])
         self.length = 2
         self.start_steer_time = 0
         self.react_angle = np.pi * 2 / 180
@@ -200,6 +200,7 @@ class Rocket(SimplePhysicsObject):
                0.5 * (vector_length(self.rotational_velocity) ** 2) * \
                ((self.length / 2) ** 2) * \
                self.drag_coefficient * \
+               self.side_surface * \
                get_air_density(self.humidity, self.temperature, self.position[1], self.pressure)
 
     def rotational_update(self, time):
@@ -214,7 +215,7 @@ class Rocket(SimplePhysicsObject):
             self.rotational_velocity) * time
         if vector_length(self.torque != 0):
             self.direction = rotate_by_axis(self.direction, self.torque, theta)
-            p.direction = p.direction / vector_length(p.direction)
+            rocket.direction = rocket.direction / vector_length(rocket.direction)
 
     def translational_update(self, time):
         self.force = self.force_function(time)
@@ -229,8 +230,7 @@ class Rocket(SimplePhysicsObject):
         self.translational_update(time)
         # self.thrust_direction = self.direction.copy()
 
-    def get_surface(self):
-        alpha = angle(self.direction, self.velocity)
+    def get_surface(self, alpha):
         return self.front_surface * abs(np.cos(alpha)) + abs(np.sin(alpha)) * self.side_surface
 
     def gravity_force(self):
@@ -239,6 +239,13 @@ class Rocket(SimplePhysicsObject):
     def translational_thrust_force(self):
         return np.cos(angle(self.thrust_direction, self.direction)) * self.thrust_current * self.direction
 
+    def wind_pressure(self):
+        if vector_length(self.wind_velocity) == 0:
+            return np.asarray([0, 0, 0])
+        return 0.5 * normalize(self.wind_velocity) * get_air_density(self.humidity, self.temperature, self.position[1],
+                                                                     self.pressure) * vector_length(
+            self.wind_velocity) ** 2 * self.get_surface(angle(self.direction, self.wind_velocity))
+
     def drag_force(self):
         vel_length = vector_length(self.velocity);
         if vel_length != 0:
@@ -246,7 +253,7 @@ class Rocket(SimplePhysicsObject):
                    (0.5 *
                     vel_length ** 2 *
                     self.drag_coefficient *
-                    self.get_surface() *
+                    self.get_surface(angle(self.direction, self.velocity)) *
                     get_air_density(
                         self.humidity,
                         self.temperature,
@@ -260,7 +267,7 @@ class Rocket(SimplePhysicsObject):
         acc = acc + self.drag_force() + \
               self.translational_thrust_force() + \
               self.gravity_force() + \
-              self.wind_force
+              self.wind_pressure()
         self.thrust_current = self.thrust * (
                 1 - ((self.mass - self.current_mass) / self.fuel_mass) * self.thrust_change)
         return acc
@@ -268,80 +275,106 @@ class Rocket(SimplePhysicsObject):
     def steer(self, global_time):
         if self.target != None and self.start_steer_time < global_time:
             distance_vector = self.target.position - self.position
-            if vector_length(distance_vector) > self.start_fly_down_distance and self.flight_altitude is not None:
-                distance_vector = np.asarray([self.target.position[0], self.flight_altitude, self.target.position[2]]) - self.position
-            alpha = angle(distance_vector, self.direction)
+            if self.start_fly_down_distance is not None and vector_length(
+                    distance_vector) > self.start_fly_down_distance and self.flight_altitude is not None:
+                distance_vector = np.asarray(
+                    [self.target.position[0], self.flight_altitude, self.target.position[2]]) - self.position
+            alpha = angle(distance_vector, self.direction) #TODO consider the angle between velocity and distance_vector
             if alpha > self.react_angle:
+                rotate_angle = (alpha * self.proportional_regulation + (
+                        alpha - self.previous_target_angle) * self.differential_regulation)
+                if rotate_angle > np.pi / 2:
+                    rotate_angle = np.pi / 2
                 self.thrust_direction = rotate_towards(self.direction, distance_vector,
-                                                       - ( alpha * self.proportional_regulation +
-                                                           (alpha - self.previous_target_angle) * self.differential_regulation ) )
+                                                       -rotate_angle)
                 self.thrust_direction = self.thrust_direction / vector_length(self.thrust_direction)
             else:
                 self.thrust_direction = self.direction
             self.previous_target_angle = alpha
 
-    def toJSON(self): #goes crazy with numpy
+    def toJSON(self):  # goes crazy with numpy
         return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
+                          sort_keys=True, indent=4)
+
+
+class Target(SimplePhysicsObject):
+    def __init__(self):
+        super().__init__()
+        self.radius = 0
+
 
 if __name__ == "__main__":
-    json_data = open("input.json").read()
+    json_data = open("../res/input.json").read()
     data = json.loads(json_data)
-    with open("output.txt") as output:
-        p = Rocket()
+    with open("../out/output.txt", "w+") as output:
+        rocket = Rocket()
         rd = data['rocket']
         rdm = rd['mass']
-        p.mass = rdm['total']
-        p.current_mass = p.mass
-        p.mass_change = rdm['change']
-        p.fuel_mass = rdm['fuel']
-        p.drag_coefficient = rd['drag_coefficient']
+        rocket.mass = rdm['total']
+        rocket.current_mass = rocket.mass
+        rocket.mass_change = rdm['change']
+        rocket.fuel_mass = rdm['fuel']
+        rocket.drag_coefficient = rd['drag_coefficient']
         if rd['direction']['angle'] == None:
-            p.direction = np.asarray(rd['direction']['xyz'])
+            rocket.direction = np.asarray(rd['direction']['xyz'])
         else:
             vec = np.asarray([1.0, 0.0, 0.0])
-            p.direction = rotate_towards(vec, [0.0, 1.0, 0.0], rd['direction']['angle'])
-        p.start_position = np.asarray([0, 0, 0])
+            rocket.direction = rotate_towards(vec, [0.0, 1.0, 0.0], rd['direction']['angle'])
+        rocket.start_position = np.asarray([0, 0, 0])
         rds = rd['surface']
-        p.side_surface = rds['side']
-        p.front_surface = rds['front']
-        p.thrust_direction = p.direction.copy()
+        rocket.side_surface = rds['side']
+        rocket.front_surface = rds['front']
+        rocket.thrust_direction = rocket.direction.copy()
         rdt = rd['thrust']
-        p.thrust = rdt['f0']
-        p.thrust_current = p.thrust
-        p.thrust_change = rdt['change']
+        rocket.thrust = rdt['f0']
+        rocket.thrust_current = rocket.thrust
+        rocket.thrust_change = rdt['change']
         sdt = data['simulation']
         delta_time = sdt['time-step']
         steer_step = sdt['steer-step']
         save_step = sdt['save-step']
-        p.humidity = sdt['humidity']
-        p.temperature = sdt['temperature']
-        p.pressure = sdt['pressure']
-        rdf = rd['flight']
-        p.start_steer_time = 5
-        p.flight_altitude = rd['altitude']
-        p.start_fly_down_distance = 500
-        p.wind_force = np.asarray([0, 0, 1])
-        p.init()
-        p.target = SimplePhysicsObject()
-        p.target.position = np.asarray([1000, 100, 100])
-        p.target.velocity[0] = 10
-        p.differential_regulation = 1
-        p.proportional_regulation = 1
-        p.start_fly_down_distance = np.inf
+        rocket.humidity = sdt['humidity']
+        rocket.temperature = sdt['temperature']
+        rocket.pressure = sdt['pressure']
+        rocket.wind_velocity = np.asarray(sdt['wind'])
+        rdf = rd['flight_control']
+        rocket.start_steer_time = rdf['start_steer']
+        rocket.flight_altitude = rdf['altitude']
+        rocket.start_fly_down_distance = rdf['start_dive']
+        rocket.proportional_regulation = rdf['proportional_regulation']
+        rocket.differential_regulation = rdf['differential_regulation']
+        rocket.init()
+
+        tdt = data['targets']
+        targets = []
+
+        for key in sorted(tdt, key=lambda x: int(x)):
+            new_target = Target()
+            new_target.radius = tdt[key]['radius']
+            new_target.position = np.asarray(tdt[key]['s'])
+            new_target.velocity = np.asarray(tdt[key]['s.'])
+            new_target.acceleration = np.asarray(tdt[key]['s..'])
+            new_target.max_velocity = np.asarray(tdt[key]['s.max'])
+            targets.append(new_target)
 
         global_time = 0
 
-
-
-        pos = p.position.copy()
-        while not segment_sphere_intersection(pos, p.position, p.target.position, 10) and distance(p.start_position, p.position) < distance(p.start_position, p.target.position):
-            p.update(delta_time)
-            p.target.update(delta_time)
-            global_time += delta_time
-            p.steer(global_time)
-            pos = p.position.copy()
-            print("p", p.position)
-        print("ep", p.target.position)
-
-
+        results = []
+        pos = rocket.position.copy()
+        for target in targets:
+            rocket.target = target
+            while True:
+                pos = rocket.position.copy()
+                rocket.update(delta_time)
+                rocket.target.update(delta_time)
+                global_time += delta_time
+                rocket.steer(global_time)
+                if not segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
+                    results.append("HIT")
+                    break
+                elif distance(rocket.start_position, rocket.position) < distance(rocket.start_position,
+                                                                                 rocket.target.position):
+                    print("p", rocket.position)
+                    results.append("MISS")
+                    break
+        print("ep", rocket.target.position)
