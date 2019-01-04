@@ -279,7 +279,10 @@ class Rocket(SimplePhysicsObject):
                     distance_vector) > self.start_fly_down_distance and self.flight_altitude is not None:
                 distance_vector = np.asarray(
                     [self.target.position[0], self.flight_altitude, self.target.position[2]]) - self.position
-            alpha = angle(distance_vector, self.direction) #TODO consider the angle between velocity and distance_vector
+            #TODO consider:
+            # the angle between velocity and distance_vector
+            # gravity or wind?
+            alpha = angle(distance_vector, self.direction)
             if alpha > self.react_angle:
                 rotate_angle = (alpha * self.proportional_regulation + (
                         alpha - self.previous_target_angle) * self.differential_regulation)
@@ -301,6 +304,11 @@ class Target(SimplePhysicsObject):
     def __init__(self):
         super().__init__()
         self.radius = 0
+
+
+def write_record(rocket, output):
+    output.write(str(rocket.position))
+    output.write("\n")
 
 
 if __name__ == "__main__":
@@ -359,22 +367,27 @@ if __name__ == "__main__":
 
         global_time = 0
 
-        results = []
         pos = rocket.position.copy()
         for target in targets:
             rocket.target = target
+            ticks = 0
             while True:
+                if ticks % save_step == 0:
+                    write_record(rocket, output)
                 pos = rocket.position.copy()
                 rocket.update(delta_time)
-                rocket.target.update(delta_time)
+                for target_ in targets:
+                    target_.update(delta_time)
                 global_time += delta_time
-                rocket.steer(global_time)
-                if not segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
-                    results.append("HIT")
+                if ticks % steer_step == 0:
+                    rocket.steer(global_time)
+                if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
+                    output.write("HIT\n")
+                    write_record(rocket, output)
                     break
-                elif distance(rocket.start_position, rocket.position) < distance(rocket.start_position,
+                elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position):
-                    print("p", rocket.position)
-                    results.append("MISS")
+                    output.write("MISS\n")
+                    write_record(rocket, output)
                     break
-        print("ep", rocket.target.position)
+                ticks += 1
