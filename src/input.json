@@ -1,0 +1,67 @@
+{
+  "simulation" : {
+    "time-step" : 0.005,
+    "steer-step" : 1, //time steps
+    "save-step" : 10, //time steps
+    "humidity" : 0.5, //earth surface, relative in %
+    "temperature" : 293,//earth surface, K
+    "pressure" : 101325 //earth surface, Pa
+  },
+
+  "rocket" : {
+    "flight" : {
+      "altitude" : null, //preferred
+      "" :
+    },
+    "mass" : {
+      "total" : 1, //kg total mass
+      "change" : -0.001, //kg/s
+      "fuel" : 0.5 //kg
+    },
+    "drag_coefficient" : 0.05,
+    "direction" : {
+      "angle": null, //oyox radians
+      "xyz" : [ 0.0, 1.0, 0.0 ]
+    },
+    "surface" : { //maximum cross section
+      "side" : 1.0,
+      "front" : 0.1
+    },
+    "drag" : {
+      "coefficient" : 0.075,
+      "humidity" : 0.5,
+      "temperature" : 293,
+      "pressure" : 101325,
+      "wind-x" : 0,
+      "wind-y" : 0,
+      "wind-z" : 0
+    },
+    "thrust" : {
+      "f0" : 100, //N
+      "change" : 0.1 //% of thrust that can change with mass
+    }
+  },
+
+  "targets" : {
+    "t0" : {
+      "x": {
+        "s": 0,
+        "s.": 0,
+        "s.max": null,
+        "s..": 0
+      },
+      "y": {
+        "s": 0,
+        "s.": 0,
+        "s.max": null,
+        "s..": 0
+      },
+      "z": {
+        "s": 0,
+        "s.": 0,
+        "s.max": null,
+        "s..": 0
+      }
+    }
+  }
+}
