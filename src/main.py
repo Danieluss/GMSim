@@ -1,9 +1,5 @@
 import numpy as np
 import json
-from collections import namedtuple
-import scipy as sp
-import matplotlib.pyplot as plt
-from scipy.integrate import odeint
 
 G = 6.67408e-11
 R_e = 6.371e6
@@ -382,12 +378,12 @@ if __name__ == "__main__":
                 if ticks % steer_step == 0:
                     rocket.steer(global_time)
                 if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
-                    output.write("HIT\n")
                     write_record(rocket, output)
+                    output.write("HIT\n")
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position):
-                    output.write("MISS\n")
                     write_record(rocket, output)
+                    output.write("MISS\n")
                     break
                 ticks += 1
