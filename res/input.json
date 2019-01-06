@@ -7,7 +7,7 @@
     "temperature" : 293,
     "pressure" : 101325,
     "wind" : [0, 0, 1],
-    "counter_velocity" : false
+    "counter_velocity" : true
   },
 
   "rocket" : {
@@ -46,6 +46,13 @@
     "0" : {
       "radius": 10,
       "s": [1000, 10, 0],
+      "s.": [0, 0, 0],
+      "s.max": null,
+      "s..": [0, 0, 0]
+    },
+    "1" : {
+      "radius": 10,
+      "s": [0, 10, 0],
       "s.": [0, 0, 0],
       "s.max": null,
       "s..": [0, 0, 0]
