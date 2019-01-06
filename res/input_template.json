@@ -1,19 +1,21 @@
 {
   "simulation" : {
-    "time-step" : 0.005,
+    "time-step" : 0.001,
     "steer-step" : 1,
-    "save-step" : 10,
+    "save-step" : 100,
     "humidity" : 0.5,
     "temperature" : 293,
     "pressure" : 101325,
-    "wind" : [0, 0, 0]
+    "wind" : [0, 0, 1],
+    "counter_velocity" : true
   },
 
   "rocket" : {
     "flight_control" : {
       "altitude" : null,
       "proportional_regulation" : 1,
-      "differential_regulation" : 1,
+      "differential_regulation" : 0.1,
+      "counter_velocity_regulation" : 0.1,
       "react_angle" : 0.03490658503,
       "start_steer" : 1,
       "start_dive" : 0
@@ -23,11 +25,13 @@
       "change" : -0.001,
       "fuel" : 0.5
     },
-    "drag_coefficient" : 0.05,
     "direction" : {
       "angle": null,
       "xyz" : [ 0.0, 1.0, 0.0 ]
     },
+    "drag_coefficient" : {
+      "front" : 0.05,
+      "side" : 0.15},
     "surface" : {
       "side" : 1.0,
       "front" : 0.1
@@ -42,6 +46,20 @@
     "0" : {
       "radius": 10,
       "s": [1000, 10, 0],
+      "s.": [0, 0, 0],
+      "s.max": null,
+      "s..": [0, 0, 0]
+    },
+    "1" : {
+      "radius": 10,
+      "s": [2000, 1000, 0],
+      "s.": [0, 0, 0],
+      "s.max": null,
+      "s..": [0, 0, 0]
+    },
+    "2" : {
+      "radius": 10,
+      "s": [3000, 0, 0],
       "s.": [0, 0, 0],
       "s.max": null,
       "s..": [0, 0, 0]

@@ -167,7 +167,8 @@ class Rocket(SimplePhysicsObject):
         self.direction = np.asarray([0, 1, 0])
         self.current_mass = 0
         self.mass_change = 0
-        self.drag_coefficient = 0.10
+        self.drag_coefficient_front = 0.10
+        self.drag_coefficient_side = 0.10
         self.side_surface = 1
         self.front_surface = 0.1
         self.force = None
@@ -176,15 +177,16 @@ class Rocket(SimplePhysicsObject):
         self.torque = None
         self.proportional_regulation = 1
         self.differential_regulation = 0
+        self.max_thrust_angle = 0.5
         self.wind_velocity = np.array([0, 0, 0])
         self.length = 2
         self.start_steer_time = 0
         self.react_angle = np.pi * 2 / 180
         self.flight_altitude = 0
-        self.start_fly_down_distance = np.inf
+        self.dive = np.inf
         self.rotational_velocity = 0
         self.rotational_acceleration = 0
-        self.previous_target_angle = 0
+        self.previous_dis_dir_angle = 0
 
     def init(self):
         self.inertia = square(self.length) / 12 * self.current_mass
@@ -195,7 +197,7 @@ class Rocket(SimplePhysicsObject):
         return opposite_vector(self.torque) / vector_length(self.torque) * \
                0.5 * (vector_length(self.rotational_velocity) ** 2) * \
                ((self.length / 2) ** 2) * \
-               self.drag_coefficient * \
+               self.drag_coefficient_side * \
                self.side_surface * \
                get_air_density(self.humidity, self.temperature, self.position[1], self.pressure)
 
@@ -242,14 +244,19 @@ class Rocket(SimplePhysicsObject):
                                                                      self.pressure) * vector_length(
             self.wind_velocity) ** 2 * self.get_surface(angle(self.direction, self.wind_velocity))
 
+    def get_drag_coefficient(self, alpha):
+        return abs(np.sin(alpha))*self.drag_coefficient_side + abs(np.cos(alpha))*self.drag_coefficient_front
+
     def drag_force(self):
         vel_length = vector_length(self.velocity);
         if vel_length != 0:
+            alpha = angle(self.direction, self.velocity)
             return opposite_vector(self.velocity) / vel_length * \
                    (0.5 *
                     vel_length ** 2 *
-                    self.drag_coefficient *
-                    self.get_surface(angle(self.direction, self.velocity)) *
+                   self.drag_coefficient_front *
+                    # self.get_drag_coefficient(alpha) *
+                    self.get_surface(alpha) *
                     get_air_density(
                         self.humidity,
                         self.temperature,
@@ -268,28 +275,50 @@ class Rocket(SimplePhysicsObject):
                 1 - ((self.mass - self.current_mass) / self.fuel_mass) * self.thrust_change)
         return acc
 
-    def steer(self, global_time):
+    def steer_directly(self, global_time):
         if self.target != None and self.start_steer_time < global_time:
             distance_vector = self.target.position - self.position
-            if self.start_fly_down_distance is not None and vector_length(
-                    distance_vector) > self.start_fly_down_distance and self.flight_altitude is not None:
+            if self.dive is not None and vector_length(
+                    distance_vector) > self.dive and self.flight_altitude is not None:
                 distance_vector = np.asarray(
                     [self.target.position[0], self.flight_altitude, self.target.position[2]]) - self.position
-            #TODO consider:
-            # the angle between velocity and distance_vector
-            # gravity or wind?
             alpha = angle(distance_vector, self.direction)
             if alpha > self.react_angle:
                 rotate_angle = (alpha * self.proportional_regulation + (
-                        alpha - self.previous_target_angle) * self.differential_regulation)
-                if rotate_angle > np.pi / 2:
-                    rotate_angle = np.pi / 2
+                        alpha - self.previous_dis_dir_angle) * self.differential_regulation)
+                if rotate_angle > self.max_thrust_angle:
+                    rotate_angle = self.max_thrust_angle
                 self.thrust_direction = rotate_towards(self.direction, distance_vector,
                                                        -rotate_angle)
                 self.thrust_direction = self.thrust_direction / vector_length(self.thrust_direction)
             else:
                 self.thrust_direction = self.direction
-            self.previous_target_angle = alpha
+            self.previous_dis_dir_angle = alpha
+
+    def steer_counter_velocity(self, global_time):
+        if self.target != None and self.start_steer_time < global_time:
+            distance_vector = self.target.position - self.position
+            if self.dive is not None and vector_length(
+                    distance_vector) > self.dive and self.flight_altitude is not None:
+                distance_vector = np.asarray(
+                    [self.target.position[0], self.flight_altitude, self.target.position[2]]) - self.position
+
+            alpha_dis_vel = angle(distance_vector, self.velocity) * (1)
+            if alpha_dis_vel > self.max_thrust_angle:
+                alpha_dis_vel = self.max_thrust_angle
+            dir_steer = rotate_towards(normalize(distance_vector), self.velocity, - alpha_dis_vel )
+            alpha_steer = angle(dir_steer, self.direction)
+            if alpha_steer > self.react_angle:
+                rotate_angle = (alpha_steer * self.proportional_regulation + (
+                        alpha_steer - self.previous_dis_dir_angle) * self.differential_regulation)
+                if rotate_angle > self.max_thrust_angle:
+                    rotate_angle = self.max_thrust_angle
+                self.thrust_direction = rotate_towards(self.direction, dir_steer,
+                                                       -rotate_angle)
+                self.thrust_direction = self.thrust_direction / vector_length(self.thrust_direction)
+            else:
+                self.thrust_direction = self.direction
+            self.previous_dis_dir_angle = alpha_steer
 
     def toJSON(self):  # goes crazy with numpy
         return json.dumps(self, default=lambda o: o.__dict__,
@@ -318,7 +347,8 @@ if __name__ == "__main__":
         rocket.current_mass = rocket.mass
         rocket.mass_change = rdm['change']
         rocket.fuel_mass = rdm['fuel']
-        rocket.drag_coefficient = rd['drag_coefficient']
+        rocket.drag_coefficient_front = rd['drag_coefficient']['front']
+        rocket.drag_coefficient_side = rd['drag_coefficient']['side']
         if rd['direction']['angle'] == None:
             rocket.direction = np.asarray(rd['direction']['xyz'])
         else:
@@ -334,6 +364,7 @@ if __name__ == "__main__":
         rocket.thrust_current = rocket.thrust
         rocket.thrust_change = rdt['change']
         sdt = data['simulation']
+        counter_velocity = sdt['counter_velocity']
         delta_time = sdt['time-step']
         steer_step = sdt['steer-step']
         save_step = sdt['save-step']
@@ -342,11 +373,13 @@ if __name__ == "__main__":
         rocket.pressure = sdt['pressure']
         rocket.wind_velocity = np.asarray(sdt['wind'])
         rdf = rd['flight_control']
+        rocket.react_angle = rdf['react_angle']
         rocket.start_steer_time = rdf['start_steer']
         rocket.flight_altitude = rdf['altitude']
-        rocket.start_fly_down_distance = rdf['start_dive']
+        rocket.dive = rdf['start_dive']
         rocket.proportional_regulation = rdf['proportional_regulation']
         rocket.differential_regulation = rdf['differential_regulation']
+        rocket.max_thrust_angle = rdf['max_thrust_angle']*np.pi
         rocket.init()
 
         tdt = data['targets']
@@ -367,6 +400,7 @@ if __name__ == "__main__":
         for target in targets:
             rocket.target = target
             ticks = 0
+            rocket.start_position = rocket.position
             while True:
                 if ticks % save_step == 0:
                     write_record(rocket, output)
@@ -376,13 +410,16 @@ if __name__ == "__main__":
                     target_.update(delta_time)
                 global_time += delta_time
                 if ticks % steer_step == 0:
-                    rocket.steer(global_time)
+                    if not counter_velocity :
+                        rocket.steer_directly(global_time)
+                    else:
+                        rocket.steer_counter_velocity(global_time)
                 if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
                     write_record(rocket, output)
                     output.write("HIT\n")
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
-                                                                                 rocket.target.position):
+                                                                                 rocket.target.position) + rocket.target.radius:
                     write_record(rocket, output)
                     output.write("MISS\n")
                     break
