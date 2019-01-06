@@ -1,117 +1,7 @@
 import numpy as np
+from sim_math import *
+from sim_physics import *
 import json
-
-G = 6.67408e-11
-R_e = 6.371e6
-M_e = 5.972e24
-g = 9.80665
-M_d = 0.028964
-M_v = 0.018016
-R_g = 8.314
-L = 0.0065
-
-
-def square(f):
-    return f * f
-
-
-def rotation_matrix(axis, theta):
-    axis = axis / np.sqrt(np.dot(axis, axis))
-    a = np.cos(theta / 2.0)
-    b, c, d = -axis * np.sin(theta / 2.0)
-    aa, bb, cc, dd = a * a, b * b, c * c, d * d
-    bc, ad, ac, ab, bd, cd = b * c, a * d, a * c, a * b, b * d, c * d
-    return np.array([[aa + bb - cc - dd, 2 * (bc + ad), 2 * (bd - ac)],
-                     [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
-                     [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
-
-
-def rotate_by_axis(vector, axis, theta):
-    return np.dot(rotation_matrix(axis, theta), vector)
-
-
-def rotate_towards(src_vector, dst_vector, theta):
-    axis = np.cross(src_vector, dst_vector)
-    return np.dot(rotation_matrix(axis, theta), src_vector)
-
-
-def vector_length(vector):
-    return np.linalg.norm(vector)
-
-
-def angle(vector0, vector1):
-    dot = np.dot(vector0, vector1) / (vector_length(vector0) * vector_length(vector1))
-    if dot < -1:
-        dot = -1
-    elif dot > 1:
-        dot = 1
-    return np.arccos(dot)
-
-
-def distance(point0, point1):
-    acc = 0
-    for i in range(len(point0)):
-        acc += square(point0[i] - point1[i])
-    return np.sqrt(acc)
-
-
-def normalize(vector):
-    return vector / vector_length(vector)
-
-
-def sphere_line_intersection(line_point1, line_point2, sphere_centre, radius):
-    for i in range(len(line_point1)):
-        if line_point1[i] == line_point2[i]:
-            return []
-    p1 = p2 = None
-
-    a = square(line_point2[0] - line_point1[0]) + square(line_point2[1] - line_point1[1]) + square(
-        line_point2[2] - line_point1[2])
-    b = 2.0 * ((line_point2[0] - line_point1[0]) * (line_point1[0] - sphere_centre[0]) +
-               (line_point2[1] - line_point1[1]) * (line_point1[1] - sphere_centre[1]) +
-               (line_point2[2] - line_point1[2]) * (line_point1[2] - sphere_centre[2]))
-    c = (square(sphere_centre[0]) + square(sphere_centre[1]) + square(sphere_centre[2]) + square(line_point1[0]) +
-         square(line_point1[1]) + square(line_point1[2]) -
-         2.0 * (sphere_centre[0] * line_point1[0] + sphere_centre[1] * line_point1[1] + sphere_centre[2] * line_point1[
-                2]) - square(radius))
-
-    i = b * b - 4.0 * a * c
-    if i < 0.0:
-        pass
-    elif i == 0.0:
-        mu = -b / (2.0 * a)
-        p1 = (line_point1[0] + mu * (line_point2[0] - line_point1[0]),
-              line_point1[1] + mu * (line_point2[1] - line_point1[1]),
-              line_point1[2] + mu * (line_point2[2] - line_point1[2]))
-    elif i > 0.0:
-        mu = (-b + np.sqrt(i)) / (2.0 * a)
-        p1 = (line_point1[0] + mu * (line_point2[0] - line_point1[0]),
-              line_point1[1] + mu * (line_point2[1] - line_point1[1]),
-              line_point1[2] + mu * (line_point2[2] - line_point1[2]))
-        mu = (-b - np.sqrt(i)) / (2.0 * a)
-        p2 = (line_point1[0] + mu * (line_point2[0] - line_point1[0]),
-              line_point1[1] + mu * (line_point2[1] - line_point1[1]),
-              line_point1[2] + mu * (line_point2[2] - line_point1[2]))
-    return p1, p2
-
-
-def line_point_between(line_point, line_point1, line_point2):
-    if line_point is None:
-        return False
-    ord = line_point1[0], line_point2[0] if line_point1[0] < line_point2[0] else line_point2[0], line_point1[0]
-    return line_point[0] >= ord[0] and line_point[0] <= ord[1]
-
-
-def either_between(segment_point0, segment_point1, points):
-    for point in points:
-        if line_point_between(point, segment_point0, segment_point1):
-            return True
-    return False
-
-
-def segment_sphere_intersection(segment_point0, segment_point1, sphere_centre, radius):
-    intersections = sphere_line_intersection(segment_point0, segment_point1, sphere_centre, radius)
-    return either_between(segment_point0, segment_point1, intersections)
 
 
 class SimplePhysicsObject:
@@ -127,29 +17,6 @@ class SimplePhysicsObject:
         # if self.max_velocity is not None:
         #     if self.max_velocity <= vector_length(self.velocity):
         #         self.velocity = self.velocity * (self.max_velocity / vector_length(self.velocity))
-
-
-def opposite_vector(vector):
-    return vector * (-1)
-
-
-def pressure_falloff(pressure, height, temperature, moll_mass):
-    return pressure * (1 - (L * height) / temperature) ** ((g * moll_mass) / (R_g * L))
-
-
-def saturation_water_pressure(temperature):
-    T_C = temperature - 273.15
-    return 0.61078 * np.power(10, (7.5 * T_C) / (T_C + 237.3)) * 100.0
-
-
-def get_air_density(humidity, temperature, height, air_pressure):
-    T = temperature - L * height
-    p_air = pressure_falloff(air_pressure, height, temperature, M_d)
-    T_C = temperature - 273.15
-    p_water0 = saturation_water_pressure(temperature) * humidity
-    p_water = pressure_falloff(p_water0, height, temperature, M_v)
-    ro = (p_air * M_d + p_water * M_v) / (T * R_g)
-    return ro
 
 
 class Rocket(SimplePhysicsObject):
@@ -245,7 +112,7 @@ class Rocket(SimplePhysicsObject):
             self.wind_velocity) ** 2 * self.get_surface(angle(self.direction, self.wind_velocity))
 
     def get_drag_coefficient(self, alpha):
-        return abs(np.sin(alpha))*self.drag_coefficient_side + abs(np.cos(alpha))*self.drag_coefficient_front
+        return abs(np.sin(alpha)) * self.drag_coefficient_side + abs(np.cos(alpha)) * self.drag_coefficient_front
 
     def drag_force(self):
         vel_length = vector_length(self.velocity);
@@ -254,7 +121,7 @@ class Rocket(SimplePhysicsObject):
             return opposite_vector(self.velocity) / vel_length * \
                    (0.5 *
                     vel_length ** 2 *
-                   self.drag_coefficient_front *
+                    self.drag_coefficient_front *
                     # self.get_drag_coefficient(alpha) *
                     self.get_surface(alpha) *
                     get_air_density(
@@ -275,39 +142,25 @@ class Rocket(SimplePhysicsObject):
                 1 - ((self.mass - self.current_mass) / self.fuel_mass) * self.thrust_change)
         return acc
 
-    def steer_directly(self, global_time):
+    def steer(self, global_time, counter_velocity):
         if self.target != None and self.start_steer_time < global_time:
             distance_vector = self.target.position - self.position
             if self.dive is not None and vector_length(
                     distance_vector) > self.dive and self.flight_altitude is not None:
                 distance_vector = np.asarray(
-                    [self.target.position[0], self.flight_altitude, self.target.position[2]]) - self.position
-            alpha = angle(distance_vector, self.direction)
-            if alpha > self.react_angle:
-                rotate_angle = (alpha * self.proportional_regulation + (
-                        alpha - self.previous_dis_dir_angle) * self.differential_regulation)
-                if rotate_angle > self.max_thrust_angle:
-                    rotate_angle = self.max_thrust_angle
-                self.thrust_direction = rotate_towards(self.direction, distance_vector,
-                                                       -rotate_angle)
-                self.thrust_direction = self.thrust_direction / vector_length(self.thrust_direction)
+                    [self.target.position[0], self.target.position[1] + self.flight_altitude,
+                     self.target.position[2]]) - self.position
+
+            if counter_velocity:
+                alpha_dis_vel = angle(distance_vector, self.velocity) * (1)
+                if alpha_dis_vel > self.max_thrust_angle:
+                    alpha_dis_vel = self.max_thrust_angle
+                dir_steer = rotate_towards(normalize(distance_vector), self.velocity, - alpha_dis_vel)
+                alpha_steer = angle(dir_steer, self.direction)
             else:
-                self.thrust_direction = self.direction
-            self.previous_dis_dir_angle = alpha
+                alpha_steer = angle(distance_vector, self.direction)
+                dir_steer = distance_vector
 
-    def steer_counter_velocity(self, global_time):
-        if self.target != None and self.start_steer_time < global_time:
-            distance_vector = self.target.position - self.position
-            if self.dive is not None and vector_length(
-                    distance_vector) > self.dive and self.flight_altitude is not None:
-                distance_vector = np.asarray(
-                    [self.target.position[0], self.flight_altitude, self.target.position[2]]) - self.position
-
-            alpha_dis_vel = angle(distance_vector, self.velocity) * (1)
-            if alpha_dis_vel > self.max_thrust_angle:
-                alpha_dis_vel = self.max_thrust_angle
-            dir_steer = rotate_towards(normalize(distance_vector), self.velocity, - alpha_dis_vel )
-            alpha_steer = angle(dir_steer, self.direction)
             if alpha_steer > self.react_angle:
                 rotate_angle = (alpha_steer * self.proportional_regulation + (
                         alpha_steer - self.previous_dis_dir_angle) * self.differential_regulation)
@@ -379,7 +232,7 @@ if __name__ == "__main__":
         rocket.dive = rdf['start_dive']
         rocket.proportional_regulation = rdf['proportional_regulation']
         rocket.differential_regulation = rdf['differential_regulation']
-        rocket.max_thrust_angle = rdf['max_thrust_angle']*np.pi
+        rocket.max_thrust_angle = rdf['max_thrust_angle'] * np.pi
         rocket.init()
 
         tdt = data['targets']
@@ -410,10 +263,7 @@ if __name__ == "__main__":
                     target_.update(delta_time)
                 global_time += delta_time
                 if ticks % steer_step == 0:
-                    if not counter_velocity :
-                        rocket.steer_directly(global_time)
-                    else:
-                        rocket.steer_counter_velocity(global_time)
+                    rocket.steer(global_time, counter_velocity)
                 if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
                     write_record(rocket, output)
                     output.write("HIT\n")
