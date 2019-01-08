@@ -91,7 +91,7 @@ class Rocket(SimplePhysicsObject):
                ((self.length / 2) ** 2) * \
                self.drag_coefficient_side * \
                self.side_surface * \
-               get_air_density(self.humidity, self.temperature, self.position[1], self.pressure)
+               get_air_density(self.humidity, self.temperature, self.position[1], self.pressure) / 3
 
     def rotational_update(self, time):
         alpha = angle(self.thrust_direction, self.direction)

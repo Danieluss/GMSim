@@ -1,0 +1,55 @@
+body
+{
+    background-color: #384952;
+    font-family: Consolas;
+    color: aliceblue;
+    line-height: 2.0;
+}
+
+label{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 250px;
+    text-align: right;
+}
+
+input[type="checkbox"]
+{
+    border: none;
+    border-radius: 4px;
+    display: inline-block;
+    float: left;
+    color: aliceblue;
+    background-color: dimgrey;
+}
+
+input[type="number"]
+{
+    border: none;
+    border-radius: 4px;
+    font-family: Consolas;
+    padding: 5px 5px;
+    color: aliceblue;
+    background-color: dimgrey;
+    display: inline-block;
+    float: left;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.button {
+    background-color: dimgrey;
+    border: none;
+    color: white;
+    padding: 15px 15px;
+    width: 200px;
+    font-family: Consolas;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #34302b;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
