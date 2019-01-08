@@ -2,15 +2,16 @@ from sim_physics import *
 import json
 
 
-def write_record(rocket, output):
-    output.write(str(rocket.position))
+def write_record(rocket, output, c):
+    output.write(str(rocket.position[0])+","+str(rocket.position[0])+","+str(rocket.position[0])+","+str(c))
     output.write("\n")
 
 
 if __name__ == "__main__":
     json_data = open("../res/input.json").read()
     data = json.loads(json_data)
-    with open("../out/output.txt", "w+") as output:
+    with open("../out/output.csv", "w+") as output:
+        output.write("x,y,z,color\n")
         rocket = Rocket()
         rd = data['rocket']
         rdm = rd['mass']
@@ -48,7 +49,7 @@ if __name__ == "__main__":
         rocket.start_steer_time = rdf['start_steer']
         rocket.flight_altitude = rdf['altitude']
         rocket.dive = rdf['start_dive']
-        rocket.proportional_regulation = rdf['proportional_regulation']
+        rockettproportional_regulation = rdf['proportional_regulation']
         rocket.differential_regulation = rdf['differential_regulation']
         rocket.max_thrust_angle = rdf['max_thrust_angle'] * np.pi
         rocket.init()
@@ -74,7 +75,7 @@ if __name__ == "__main__":
             rocket.start_position = rocket.position
             while True:
                 if ticks % save_step == 0:
-                    write_record(rocket, output)
+                    write_record(rocket, output, 0)
                 pos = rocket.position.copy()
                 rocket.update(delta_time)
                 for target_ in targets:
@@ -83,12 +84,10 @@ if __name__ == "__main__":
                 if ticks % steer_step == 0:
                     rocket.steer(global_time, counter_velocity)
                 if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
-                    write_record(rocket, output)
-                    output.write("HIT\n")
+                    write_record(rocket, output, 1)
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position) + rocket.target.radius:
-                    write_record(rocket, output)
-                    output.write("MISS\n")
+                    write_record(rocket, output, -1)
                     break
                 ticks += 1
