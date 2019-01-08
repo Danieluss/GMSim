@@ -1,15 +1,14 @@
 
-GRAPH = document.getElementById('graph');
-
-Plotly.d3.csv('../out/output.csv', function(err, rows){
+Plotly.d3.csv('res/plotly-latest.min.js', function(err, rows){
       function unpack(rows, key) {
           return rows.map(function(row)
           { return row[key]; }); }
+
 var x = unpack(rows , 'x');
 var y = unpack(rows , 'y');
 var z = unpack(rows , 'z');
 var c = unpack(rows , 'color');
-Plotly.plot(GRAPH, [{
+Plotly.plot('graph', [{
   type: 'scatter3d',
   mode: 'lines',
   x: x,
@@ -23,6 +22,5 @@ Plotly.plot(GRAPH, [{
   }
 }], {
   height: 640
-}, {showSendToCloud: true});
 });
-
+});
