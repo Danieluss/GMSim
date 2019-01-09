@@ -91,7 +91,7 @@ class Rocket(SimplePhysicsObject):
                ((self.length / 2) ** 2) * \
                self.drag_coefficient_side * \
                self.side_surface * \
-               get_air_density(self.humidity, self.temperature, self.position[1], self.pressure)
+               get_air_density(self.humidity, self.temperature, self.position[1], self.pressure) / 3
 
     def rotational_update(self, time):
         alpha = angle(self.thrust_direction, self.direction)
@@ -143,11 +143,33 @@ class Rocket(SimplePhysicsObject):
         vel_length = vector_length(self.velocity);
         if vel_length != 0:
             alpha = angle(self.direction, self.velocity)
-            return opposite_vector(self.velocity) / vel_length * \
+            return opposite_vector(self.velocity) * \
                    (0.5 *
-                    vel_length ** 2 *
-                    self.drag_coefficient_front *
-                    # self.get_drag_coefficient(alpha) *
+                    vel_length *
+                    # self.drag_coefficient_front *
+                    self.get_drag_coefficient(alpha) *
+                    self.get_surface(alpha) *
+                    get_air_density(
+                        self.humidity,
+                        self.temperature,
+                        self.position[1],
+                        self.pressure))
+        else:
+            return np.asarray([0, 0, 0])
+
+    def get_lift_coefficient(self, alpha):
+        return self.get_drag_coefficient(alpha)/10
+
+    def lift_force(self):
+        vel_length = vector_length(self.velocity)
+        if vel_length != 0:
+            alpha = angle(self.direction, self.velocity)
+            base_vec = rotate_towards(self.velocity, self.direction, np.pi / 2)
+            return base_vec * \
+                   (0.5 *
+                    vel_length *
+                    abs(np.sin(alpha*2)) *
+                    self.get_lift_coefficient(alpha) *
                     self.get_surface(alpha) *
                     get_air_density(
                         self.humidity,
@@ -162,7 +184,8 @@ class Rocket(SimplePhysicsObject):
         acc = acc + self.drag_force() + \
               self.translational_thrust_force() + \
               self.gravity_force() + \
-              self.wind_pressure()
+              self.wind_pressure() + \
+              self.lift_force()
         self.thrust_current = self.thrust * (
                 1 - ((self.mass - self.current_mass) / self.fuel_mass) * self.thrust_change)
         return acc
