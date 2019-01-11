@@ -3,7 +3,7 @@ import json
 
 
 def write_record(rocket, output):
-    output.write(str(rocket.position))
+    output.write(str(rocket.position[0]) + " " + str(rocket.position[1]) + " " + str(rocket.position[2]))
     output.write("\n")
 
 
@@ -76,12 +76,9 @@ if __name__ == "__main__":
                 if ticks % save_step == 0:
                     write_record(rocket, output)
                 pos = rocket.position.copy()
-                rocket.update(delta_time)
                 for target_ in targets:
                     target_.update(delta_time)
-                global_time += delta_time
-                if ticks % steer_step == 0:
-                    rocket.steer(global_time, counter_velocity)
+                rocket.update(delta_time)
                 if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
                     write_record(rocket, output)
                     output.write("HIT\n")
@@ -91,4 +88,7 @@ if __name__ == "__main__":
                     write_record(rocket, output)
                     output.write("MISS\n")
                     break
+                if ticks % steer_step == 0:
+                    rocket.steer(global_time, counter_velocity)
+                global_time += delta_time
                 ticks += 1

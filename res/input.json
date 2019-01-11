@@ -2,7 +2,7 @@
   "simulation" : {
     "time-step" : 0.005,
     "steer-step" : 1,
-    "save-step" : 10,
+    "save-step" : 15,
     "humidity" : 0.5,
     "temperature" : 293,
     "pressure" : 101325,
@@ -15,7 +15,7 @@
       "altitude" : null,
       "proportional_regulation" : 1,
       "differential_regulation" : 1,
-      "max_thrust_angle" : 0.25,
+      "max_thrust_angle" : 0.10,
       "react_angle" : 0.01,
       "start_steer" : 1,
       "start_dive" : 0
@@ -52,7 +52,7 @@
     },
     "1" : {
       "radius": 10,
-      "s": [0, 10, 0],
+      "s": [0, 20, 0],
       "s.": [0, 0, 0],
       "s.max": null,
       "s..": [0, 0, 0]
