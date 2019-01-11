@@ -75,7 +75,7 @@ if __name__ == "__main__":
             rocket.start_position = rocket.position
             while True:
                 if ticks % save_step == 0:
-                    write_record(rocket, output, 0)
+                    write_record(rocket, output, ticks)
                 pos = rocket.position.copy()
                 rocket.update(delta_time)
                 for target_ in targets:
@@ -84,10 +84,10 @@ if __name__ == "__main__":
                 if ticks % steer_step == 0:
                     rocket.steer(global_time, counter_velocity)
                 if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
-                    write_record(rocket, output, 0)
+                    write_record(rocket, output, ticks)
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position) + rocket.target.radius:
-                    write_record(rocket, output, 0)
+                    write_record(rocket, output, ticks)
                     break
                 ticks += 1
