@@ -3,7 +3,7 @@ import json
 
 
 def write_record(rocket, output, c):
-    output.write(str(rocket.position[0])+","+str(rocket.position[0])+","+str(rocket.position[0])+","+str(c))
+    output.write(str(rocket.position[0])+","+str(rocket.position[1])+","+str(rocket.position[2])+","+str(c))
     output.write("\n")
 
 
@@ -84,10 +84,10 @@ if __name__ == "__main__":
                 if ticks % steer_step == 0:
                     rocket.steer(global_time, counter_velocity)
                 if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
-                    write_record(rocket, output, 1)
+                    write_record(rocket, output, 0)
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position) + rocket.target.radius:
-                    write_record(rocket, output, -1)
+                    write_record(rocket, output, 0)
                     break
                 ticks += 1
