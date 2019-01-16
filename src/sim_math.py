@@ -50,9 +50,9 @@ def normalize(vector):
 
 
 def sphere_line_intersection(line_point1, line_point2, sphere_centre, radius):
-    for i in range(len(line_point1)):
-        if line_point1[i] == line_point2[i]:
-            return []
+    # for i in range(len(line_point1)):
+    #     if line_point1[i] == line_point2[i]:
+    #         return []
     p1 = p2 = None
 
     a = square(line_point2[0] - line_point1[0]) + square(line_point2[1] - line_point1[1]) + square(
@@ -88,8 +88,15 @@ def sphere_line_intersection(line_point1, line_point2, sphere_centre, radius):
 def line_point_between(line_point, line_point1, line_point2):
     if line_point is None:
         return False
-    ord = line_point1[0], line_point2[0] if line_point1[0] < line_point2[0] else line_point2[0], line_point1[0]
-    return line_point[0] >= ord[0] and line_point[0] <= ord[1]
+    if line_point1[0] != line_point2[0]:
+        ord = line_point1[0], line_point2[0] if line_point1[0] < line_point2[0] else line_point2[0], line_point1[0]
+        return line_point[0] >= ord[0] and line_point[0] <= ord[1]
+    elif line_point1[1] != line_point2[1]:
+        ord = line_point1[1], line_point2[1] if line_point1[1] < line_point2[1] else line_point2[1], line_point1[1]
+        return line_point[1] >= ord[0] and line_point[1] <= ord[1]
+    elif line_point1[2] != line_point2[2]:
+        ord = line_point1[2], line_point2[2] if line_point1[2] < line_point2[2] else line_point2[2], line_point1[2]
+        return line_point[2] >= ord[0] and line_point[2] <= ord[1]
 
 
 def either_between(segment_point0, segment_point1, points):
