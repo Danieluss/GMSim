@@ -80,6 +80,9 @@ class Rocket(SimplePhysicsObject):
         self.rotational_acceleration = 0
         self.previous_dis_dir_angle = 0
 
+    def init(self):
+        self.inertia = square(self.length) / 12 * self.current_mass
+
     def torque_drag(self):
         if vector_length(self.torque) == 0:
             return 0
@@ -91,34 +94,34 @@ class Rocket(SimplePhysicsObject):
                get_air_density(self.humidity, self.temperature, self.position[1], self.pressure) / 3
 
     def rotational_update(self, time):
-        self.inertia = square(self.length) / 12 * self.current_mass
         alpha = angle(self.thrust_direction, self.direction)
         if alpha > np.pi / 2:
             self.thrust_direction = rotate_towards(self.thrust_direction, self.direction, alpha - (np.pi / 2))
-        self.torque = (-1) * np.cross(self.direction * self.length / 2, self.thrust_current * self.thrust_direction)
+        self.torque = np.cross(self.direction * self.length / 2, (-1) * self.thrust_current * self.thrust_direction)
         self.torque = self.torque + self.torque_drag()
-        self.rotational_acceleration = self.torque / self.inertia
-        self.rotational_velocity = time * self.rotational_acceleration
+        self.rotational_acceleration = (self.torque - self.rotational_velocity * (
+                    square(self.length) / 12 * self.actual_mass_change)) / self.inertia
         theta = vector_length(self.rotational_acceleration) * square(time) / 2 + vector_length(
             self.rotational_velocity) * time
+        self.rotational_velocity = self.rotational_velocity + (time * self.rotational_acceleration)
         if vector_length(self.torque != 0):
             self.direction = rotate_by_axis(self.direction, self.torque, theta)
             self.direction = self.direction / vector_length(self.direction)
+        self.inertia = square(self.length) / 12 * self.current_mass
 
     def translational_update(self, time):
         self.force = self.force_function(time)
-        actual_mass_change = self.current_mass
+        self.actual_mass_change = self.current_mass
         self.current_mass += self.mass_change * time
         if self.current_mass < self.mass - self.fuel_mass:
             self.current_mass = self.mass - self.fuel_mass
-        actual_mass_change = self.current_mass - actual_mass_change
-        self.acceleration = (self.force - (actual_mass_change * time) * self.velocity) / self.current_mass
+        self.actual_mass_change = self.current_mass - self.actual_mass_change
+        self.acceleration = (self.force - (self.actual_mass_change * time) * self.velocity) / self.current_mass
         super().update(time)
 
     def update(self, time):
-        self.rotational_update(time)
         self.translational_update(time)
-        # self.thrust_direction = self.direction.copy()
+        self.rotational_update(time)
 
     def get_surface(self, alpha):
         return self.front_surface * abs(np.cos(alpha)) + abs(np.sin(alpha)) * self.side_surface
@@ -158,26 +161,26 @@ class Rocket(SimplePhysicsObject):
             return np.asarray([0, 0, 0])
 
     def get_lift_coefficient(self, alpha):
-        return self.get_drag_coefficient(alpha)/10
+        return self.get_drag_coefficient(alpha) / 10
 
     def lift_force(self):
         vel_length = vector_length(self.velocity)
         if vel_length != 0:
             alpha = angle(self.direction, self.velocity)
-            base_vec = rotate_towards(self.velocity, self.direction, np.pi / 2)
-            return base_vec * \
-                   (0.5 *
-                    vel_length *
-                    abs(np.sin(alpha*2)) *
-                    self.get_lift_coefficient(alpha) *
-                    self.get_surface(alpha) *
-                    get_air_density(
-                        self.humidity,
-                        self.temperature,
-                        self.position[1],
-                        self.pressure))
-        else:
-            return np.asarray([0, 0, 0])
+            if alpha != 0.0:
+                base_vec = rotate_towards(self.velocity, self.direction, np.pi / 2)
+                return base_vec * \
+                       (0.5 *
+                        vel_length *
+                        abs(np.sin(alpha * 2)) *
+                        self.get_lift_coefficient(alpha) *
+                        self.get_surface(alpha) *
+                        get_air_density(
+                            self.humidity,
+                            self.temperature,
+                            self.position[1],
+                            self.pressure))
+        return np.asarray([0, 0, 0])
 
     def force_function(self, time):
         acc = np.asarray([0, 0, 0])

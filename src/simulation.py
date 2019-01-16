@@ -3,14 +3,14 @@ import json
 
 
 def write_record(rocket, output):
-    output.write(str(rocket.position[0])+","+str(rocket.position[1])+","+str(rocket.position[2])+","+str(c))
+    output.write(str(rocket.position[0])+","+str(rocket.position[1])+","+str(rocket.position[2]) + "," + "0")
     output.write("\n")
 
 
 if __name__ == "__main__":
     json_data = open("../res/input.json").read()
     data = json.loads(json_data)
-    with open("../out/output.txt", "w+") as output:
+    with open("../out/output.csv", "w+") as output:
         output.write("x,y,z,color\n")
         rocket = Rocket()
         rd = data['rocket']
@@ -55,6 +55,7 @@ if __name__ == "__main__":
         rocket.proportional_regulation = rdf['proportional_regulation']
         rocket.differential_regulation = rdf['differential_regulation']
         rocket.max_thrust_angle = rdf['max_thrust_angle'] * np.pi
+
         rocket.init()
 
         tdt = data['targets']
@@ -95,7 +96,7 @@ if __name__ == "__main__":
                     output.write("MISS\n")
                     ground_hit = True
                     break
-                elif segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
+                elif segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius) or distance(rocket.target.position, rocket.position) <= rocket.target.radius:
                     output.write("HIT\n")
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,

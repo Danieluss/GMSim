@@ -2,11 +2,11 @@
   "simulation" : {
     "time-step" : 0.005,
     "steer-step" : 1,
-    "save-step" : 15,
+    "save-step" : 100,
     "humidity" : 0.5,
     "temperature" : 293,
     "pressure" : 101325,
-    "wind" : [0, 0, 1],
+    "wind" : [0, 0, 0],
     "counter_velocity" : true,
     "ground_level" : -1
   },
@@ -16,7 +16,7 @@
       "altitude" : null,
       "proportional_regulation" : 1,
       "differential_regulation" : 1,
-      "max_thrust_angle" : 0.10,
+      "max_thrust_angle" : 0.01,
       "react_angle" : 0.01,
       "start_steer" : 1,
       "start_dive" : 0
