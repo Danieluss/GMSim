@@ -98,7 +98,7 @@ class Rocket(SimplePhysicsObject):
         if alpha > np.pi / 2:
             self.thrust_direction = rotate_towards(self.thrust_direction, self.direction, alpha - (np.pi / 2))
         self.torque = np.cross(self.direction * self.length / 2, (-1) * self.thrust_current * self.thrust_direction)
-        self.torque = self.torque + self.torque_drag()
+        self.torque = self.torque + self.torque_drag() + np.cross(self.velocity, self.length/2 * self.direction)
         self.rotational_acceleration = (self.torque - self.rotational_velocity * (
                     square(self.length) / 12 * self.actual_mass_change)) / self.inertia
         theta = vector_length(self.rotational_acceleration) * square(time) / 2 + vector_length(
