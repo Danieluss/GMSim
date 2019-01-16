@@ -8,6 +8,7 @@ function download(content, fileName, contentType) {
     a.click();
 }
 
+/*
 var data = {
     simulation : {
         time-step : 0.010,
@@ -58,4 +59,4 @@ btn.onclick = function()
     console.log("Reeeee");
     download(JSON.stringify(data), 'res/input.json', 'text/plain');
     console.log("Raaaaaa");
-};
+};*/
