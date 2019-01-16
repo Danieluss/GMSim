@@ -80,9 +80,6 @@ class Rocket(SimplePhysicsObject):
         self.rotational_acceleration = 0
         self.previous_dis_dir_angle = 0
 
-    def init(self):
-        self.inertia = square(self.length) / 12 * self.current_mass
-
     def torque_drag(self):
         if vector_length(self.torque) == 0:
             return 0
@@ -94,6 +91,7 @@ class Rocket(SimplePhysicsObject):
                get_air_density(self.humidity, self.temperature, self.position[1], self.pressure) / 3
 
     def rotational_update(self, time):
+        self.inertia = square(self.length) / 12 * self.current_mass
         alpha = angle(self.thrust_direction, self.direction)
         if alpha > np.pi / 2:
             self.thrust_direction = rotate_towards(self.thrust_direction, self.direction, alpha - (np.pi / 2))
