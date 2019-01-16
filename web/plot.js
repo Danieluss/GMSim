@@ -86,7 +86,7 @@ Plotly.d3.csv('out/output.csv', function(err, rows){
             range: [Math.min(Math.min(x),Math.min(y),Math.min(z)),Math.max(Math.max(x),Math.max(y),Math.max(z))]
         },
 
-        updatemenus: [{
+        /*updatemenus: [{
             x: 0,
             y: 0,
             yanchor: 'top',
@@ -125,14 +125,14 @@ Plotly.d3.csv('out/output.csv', function(err, rows){
                 font: {size: 20, color: '#666'}
             },
             steps: sliderSteps
-        }]
+        }]*/
     };
 
     Plotly.plot('graph',{
         data: [trace0,trace1],
         layout: layout,
-    }).then(function(){
-        Plotly.addFrames('graph',frames)
-    });
+    })//.then(function(){
+        //Plotly.addFrames('graph',frames)
+    //});
 });
 
