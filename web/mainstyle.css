@@ -76,8 +76,8 @@ input[type="number"]
  /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  position: absolute; /* Stay in place */
+  z-index: 9999; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -99,16 +99,17 @@ input[type="number"]
 }
 
 /* The Close Button */
-.close {
+.closem {
   color: #aaa;
     color: black;
   float: right;
   font-size: 28px;
   font-weight: bold;
+    padding: 20px;
 }
 
-.close:hover,
-.close:focus {
+.closem:hover,
+.closem:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
@@ -116,10 +117,6 @@ input[type="number"]
 
 /* TARGET LIST */
 
-/* Include the padding and border in an element's total width and height */
-* {
-  box-sizing: border-box;
-}
 
 /* Remove margins and padding from the list */
 ul {
@@ -202,16 +199,6 @@ ul li.checked::before {
   clear: both;
 }
 
-/* Style the input */
-input {
-  margin: 0;
-  border: none;
-  border-radius: 0;
-  width: 75%;
-  padding: 10px;
-  float: left;
-  font-size: 16px;
-}
 
 /* Style the "Add" button */
 .addBtn {

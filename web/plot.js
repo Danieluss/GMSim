@@ -77,13 +77,16 @@ Plotly.d3.csv('out/output.csv', function(err, rows){
     var layout = {
         height: 640,
         xaxis: {
-            range: [Math.min(Math.min(x),Math.min(y),Math.min(z)),Math.max(Math.max(x),Math.max(y),Math.max(z))]
+            range: [Math.min(Math.min(x),Math.min(y),Math.min(z)),Math.max(Math.max(x),Math.max(y),Math.max(z))],
+            label: "OX"
         },
         yaxis: {
-            range: [Math.min(Math.min(x),Math.min(y),Math.min(z)),Math.max(Math.max(x),Math.max(y),Math.max(z))]
+            range: [Math.min(Math.min(x),Math.min(y),Math.min(z)),Math.max(Math.max(x),Math.max(y),Math.max(z))],
+            label: "OZ"
         },
         zaxis:{
-            range: [Math.min(Math.min(x),Math.min(y),Math.min(z)),Math.max(Math.max(x),Math.max(y),Math.max(z))]
+            range: [Math.min(Math.min(x),Math.min(y),Math.min(z)),Math.max(Math.max(x),Math.max(y),Math.max(z))],
+            label: "OY"
         },
 
         /*updatemenus: [{
