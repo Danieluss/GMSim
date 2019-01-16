@@ -91,7 +91,6 @@ if __name__ == "__main__":
                     rocket.steer(global_time, counter_velocity)
 
                 write_record(rocket, output)
-
                 if rocket.position[1] < ground_level:
                     output.write("MISS\n")
                     ground_hit = True
