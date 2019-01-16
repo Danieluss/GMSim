@@ -4,3 +4,4 @@
 4. jakoś musisz porobić pozycje targetów (dodatkowe serie na obecnym wykresie 3d czy coś)
 5. wykresy 2d - prędkość od czasu i co ci jeszcze przyjdzie do głowy, czyli podejrzewam jak zwykle nic
 6. weź mi dawaj ten przekrój poprzeczny do pliku, ale na input wchodzi długość i szerokość rakiety, będzie bardziej po ludzku
+7. Na wykresie domyślnie oś OX > oś OY ^, na razie początkowa kamera jest taka, że OZ ^
