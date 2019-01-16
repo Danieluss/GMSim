@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="res/plotly-latest.min.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js' type="text/javascript"></script>
+    <script src="res/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="res/mainstyle.css">
+    <meta charset="utf-8">
+</head>
+<body>
+    <div class="grid-container">
+        <div class="item1">
+            Simulation:
+            <p>
+                <label>Time step[s]:</label><input type="number" min="0.005" max="0.05" step="0.025" id=time-step"><br>
+                <label>Steer step[T]:</label><input type="number" min="1" max="1000" id="steer-step"><br>
+                <label>Save step[T]:</label><input type="number" min="1" id="save-step"><br>
+                <label>Humidity[%]:</label><input type="number" min="0" max="100" id=humidity"><br>
+                <label>Temperature{K]:</label><input type="number" min="200" max="400" id="temperature"><br>
+                <label>Pressure[Pa]:</label><input type="number" min="0" max="200000" id="pressure"><br>
+            </p>
+                Wind[m/s]:<br>
+            <p>
+                <label>x:</label><input type="number" id="windx"><br>
+                <label>y:</label><input type="number" id="windy"><br>
+                <label>z:</label><input type="number" id="windz"><br>
+                <label>Counter Velocity:</label><input class="container" type="checkbox" id="counter_velocity"><br>
+            </p>
+            Rocket:<br><br>
+            Flight control:<br>
+            <p>
+                <label>Altitude[m]:</label><input type="number" id="altitude"><br>
+                <label>Proportional regulation:</label><input type="number" id="proportional_regulation"><br>
+                <label>Differential regulation:</label><input type="number" id="differential_regulation"><br>
+                <label>Max thrust angle[rad*pi]:</label><input type="number" min="0" max="0.25" id="max_thrust_angle"><br>
+                <label>React angle[rad*pi]:</label><input type="number" min="0" max="0.25" id="react_angle"><br>
+                <label>Start steer[s]:</label><input type="number" min="0" max="1000" id="start_steer"><br>
+                <label>Start dive[m]:</label><input type="number" min="0" max="2000" id="start_dive"><br>
+            </p>
+                Mass:<br>
+            <p>
+                <label>Total[kg]:</label><input type="number" min="0.001" id="total"><br>
+                <label>Change[kg/s]:</label><input type="number" min="0" id="change"><br>
+                <label>Fuel[kg]:</label><input type="number" min="0.001" id="fuel"><br>
+            </p>
+                Direction[rad*pi]:<br>
+            <p>
+                <label>Angle:</label><input type="number" min="0" max="0.5" step="0.01" id="angle"><br>
+                <label>X:</label><input type="number" min="0" max="1" step="0.025" id="x"><br>
+                <label>Y:</label><input type="number" min="0" max="1" step="0.025" id="y"><br>
+                <label>Z:</label><input type="number" min="0" max="1" step="0.025" id="z"><br>
+            </p>
+                Drag coefficient:<br>
+            <p>
+                <label>Front:</label><input type="number" min="0" max="1" step="0.025" id="front"><br>
+                <label>Side:</label><input type="number" min="0" max="1" step="0.025" id="side"><br>
+            </p>
+                Surface cross-section[m^2]:<br>
+            <p>
+                <label>Side:</label><input type="number" min="0" max="10000" id="sides"><br>
+                <label>Front:</label><input type="number" min="0" max="10000" id="fronts"><br>
+            </p>
+                Thrust:<br>
+            <p>
+                <label>F0[N]:</label><input type="number" min="0" step="0.025" id="f0"><br>
+                <label>Change:</label><input type="number" min="0" max="1" step="0.025" id="thrustchange"><br>
+            </p>
+
+        </div>
+
+
+        <div class="item2">
+            <p>
+                <div id="graph"></div>
+            </p>
+            <p>
+                <button class="button" id="load">Load config</button>
+                <button class="button" id="target">Add target</button><br>
+                <button class="button" id="save">Save config</button>
+                <button class="button" id="start">Start simulation</button><br>
+            </p>
+        </div>
+    </div>
+
+    <div id="addTarget" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Some text in the Modal..</p>
+      </div>
+
+    </div>
+    <script src="src/plot.js"></script>
+    <script src="res/modal.js"></script>
+    <script src="src/startSimulation.js"></script>
+</body>
+
+
+</html>

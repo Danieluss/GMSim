@@ -3,7 +3,7 @@ import json
 
 
 def write_record(rocket, output):
-    output.write(str(rocket.position[0]) + " " + str(rocket.position[1]) + " " + str(rocket.position[2]))
+    output.write(str(rocket.position[0])+","+str(rocket.position[1])+","+str(rocket.position[2])+","+str(c))
     output.write("\n")
 
 
@@ -11,6 +11,7 @@ if __name__ == "__main__":
     json_data = open("../res/input.json").read()
     data = json.loads(json_data)
     with open("../out/output.txt", "w+") as output:
+        output.write("x,y,z,color\n")
         rocket = Rocket()
         rd = data['rocket']
         rdm = rd['mass']
@@ -22,6 +23,7 @@ if __name__ == "__main__":
         rocket.drag_coefficient_side = rd['drag_coefficient']['side']
         if rd['direction']['angle'] == None:
             rocket.direction = np.asarray(rd['direction']['xyz'])
+            normalize(rocket.direction)
         else:
             vec = np.asarray([1.0, 0.0, 0.0])
             rocket.direction = rotate_towards(vec, [0.0, 1.0, 0.0], rd['direction']['angle'])
@@ -39,6 +41,8 @@ if __name__ == "__main__":
         delta_time = sdt['time-step']
         steer_step = sdt['steer-step']
         save_step = sdt['save-step']
+        ground_level = sdt['ground_level']
+        ground_hit = False
         rocket.humidity = sdt['humidity']
         rocket.temperature = sdt['temperature']
         rocket.pressure = sdt['pressure']
@@ -69,6 +73,8 @@ if __name__ == "__main__":
 
         pos = rocket.position.copy()
         for target in targets:
+            if ground_hit:
+                break
             rocket.target = target
             ticks = 0
             rocket.start_position = rocket.position
@@ -76,19 +82,24 @@ if __name__ == "__main__":
                 if ticks % save_step == 0:
                     write_record(rocket, output)
                 pos = rocket.position.copy()
+                rocket.update(delta_time)
                 for target_ in targets:
                     target_.update(delta_time)
-                rocket.update(delta_time)
-                if segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
-                    write_record(rocket, output)
+                global_time += delta_time
+                if ticks % steer_step == 0:
+                    rocket.steer(global_time, counter_velocity)
+
+                write_record(rocket, output)
+
+                if rocket.position[1] < ground_level:
+                    output.write("MISS\n")
+                    ground_hit = True
+                    break
+                elif segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius):
                     output.write("HIT\n")
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position) + rocket.target.radius:
-                    write_record(rocket, output)
                     output.write("MISS\n")
                     break
-                if ticks % steer_step == 0:
-                    rocket.steer(global_time, counter_velocity)
-                global_time += delta_time
                 ticks += 1

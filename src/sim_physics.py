@@ -109,10 +109,12 @@ class Rocket(SimplePhysicsObject):
 
     def translational_update(self, time):
         self.force = self.force_function(time)
-        self.acceleration = (self.force - (self.mass_change * time) * self.velocity) / self.current_mass
+        actual_mass_change = self.current_mass
         self.current_mass += self.mass_change * time
         if self.current_mass < self.mass - self.fuel_mass:
             self.current_mass = self.mass - self.fuel_mass
+        actual_mass_change = self.current_mass - actual_mass_change
+        self.acceleration = (self.force - (actual_mass_change * time) * self.velocity) / self.current_mass
         super().update(time)
 
     def update(self, time):

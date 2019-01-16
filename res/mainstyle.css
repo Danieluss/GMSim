@@ -1,0 +1,108 @@
+body
+{
+    background-color: #384952;
+    font-family: Consolas;
+    color: aliceblue;
+    line-height: 2.0;
+}
+
+label{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 250px;
+    text-align: right;
+}
+
+input[type="checkbox"]
+{
+    border: none;
+    border-radius: 4px;
+    display: inline-block;
+    float: left;
+    color: aliceblue;
+    background-color: dimgrey;
+}
+
+input[type="number"]
+{
+    border: none;
+    border-radius: 4px;
+    font-family: Consolas;
+    padding: 5px 5px;
+    color: aliceblue;
+    background-color: dimgrey;
+    display: inline-block;
+    float: left;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.button {
+    background-color: dimgrey;
+    border: none;
+    color: white;
+    padding: 15px 15px;
+    width: 200px;
+    font-family: Consolas;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #34302b;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.grid-container {
+  display: grid;
+    columns: 500px;
+}
+
+.item1 {
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+.item2 {
+  grid-column-start: 2;
+  grid-column-end: 4;
+}
+
+ /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+} 

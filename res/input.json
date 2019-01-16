@@ -7,7 +7,8 @@
     "temperature" : 293,
     "pressure" : 101325,
     "wind" : [0, 0, 1],
-    "counter_velocity" : true
+    "counter_velocity" : true,
+    "ground_level" : -1
   },
 
   "rocket" : {
