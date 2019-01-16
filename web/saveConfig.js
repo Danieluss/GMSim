@@ -1,62 +1,91 @@
 var btn = document.getElementById("save");
 
-function download(content, fileName, contentType) {
-    var a = document.createElement("a");
-    var file = new Blob([content], {type: contentType});
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
-}
+var timestep = document.getElementById("time-step");
+var steerstep = document.getElementById("steer-step");
+var savestep = document.getElementById("save-step");
+var humidity = document.getElementById("humidity");
+var temperature = document.getElementById("temperature");
+var pressure = document.getElementById("pressure");
+var ground_level = document.getElementById("ground_level");
 
-/*
-var data = {
-    simulation : {
-        time-step : 0.010,
-        steer-step : 1,
-        save-step : 15,
-        humidity : 0.6,
-        temperature : 293,
-        pressure : 101325,
-        wind : [0, 0, 1],
-        counter_velocity : true
-    },
+var windx = document.getElementById("windx");
+var windy = document.getElementById("windy");
+var windz = document.getElementById("windz");
+var counter_velocity = document.getElementById("counter_velocity");
 
-    rocket : {
-        flight_control : {
-            altitude : null,
-            proportional_regulation : 1,
-            differential_regulation : 1,
-            max_thrust_angle : 0.10,
-            react_angle : 0.01,
-            start_steer : 1,
-            start_dive : 0
-        },
-        mass : {
-            total : 1,
-            change : -0.001,
-            fuel : 0.5
-        },
-        direction : {
-            angle: null,
-            xyz : [ 0.0, 1.0, 0.0 ]
-        },
-        drag_coefficient : {
-            front : 0.05,
-            side : 0.15},
-        surface : {
-            side : 1.0,
-            front : 0.1
-        },
-        thrust : {
-            f0 : 100,
-            change : 1
-        }
-    }
-};
+var altitude = document.getElementById("altitude");
+var propotional_regulation = document.getElementById("propotional_regulation");
+var differential_regulation = document.getElementById("differential_regulation");
+var max_thrust_angle = document.getElementById("max_thrust_angle");
+var react_angle = document.getElementById("react_angle");
+var start_steer = document.getElementById("start_steer");
+var start_dive = document.getElementById("start_dive");
+
+var total = document.getElementById("total");
+var change = document.getElementById("change");
+var fuel = document.getElementById("fuel");
+
+var angle = document.getElementById("angle");
+var x = document.getElementById("x");
+var y = document.getElementById("y");
+var z = document.getElementById("z");
+
+var front = document.getElementById("front");
+var side = document.getElementById("side");
+
+var fronts = document.getElementById("fronts");
+var sides = document.getElementById("sides");
+
+var f0 = document.getElementById("f0");
+var thrustchange = document.getElementById("thrustchange");
 
 btn.onclick = function()
 {
-    console.log("Reeeee");
-    download(JSON.stringify(data), 'res/input.json', 'text/plain');
-    console.log("Raaaaaa");
-};*/
+    eel.save_config(
+        {
+            simulation: {
+                timestep: timestep.value,
+                steerstep: steerstep.value,
+                savesteo: savestep.value,
+                humidity: humidity.value,
+                temperature: temperature.value,
+                pressure: pressure.value,
+                ground_level: ground_level.value,
+                wind: [windx.value, windy.value, windz.value],
+                counter_velocity: counter_velocity.value
+            },
+            rocket: {
+                flight_control: {
+                    altitude: altitude.value,
+                    proportional_regulation: propotional_regulation.value,
+                    differential_regulation: differential_regulation.value,
+                    max_thrust_angle: max_thrust_angle.value,
+                    react_angle: react_angle.value,
+                    start_steer: start_steer.value,
+                    start_dive: start_dive.value
+                },
+                mass: {
+                    total: total.value,
+                    change: change.value,
+                    fuel: fuel.value
+                },
+                direction: {
+                    angle: angle.value,
+                    xyz: [x.value, y.value, z.value]
+                },
+                drag_coefficient: {
+                    front: front.value,
+                    side: side.value
+                },
+                surface: {
+                    front: fronts.value,
+                    side: sides.value
+                },
+                thrust: {
+                    f0: f0.value,
+                    change: thrustchange.value
+                }
+            }
+        }
+    )
+}

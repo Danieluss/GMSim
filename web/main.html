@@ -3,6 +3,7 @@
 <head>
     <script src="plotly-latest.min.js"></script>
     <script src="jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/eel.js"></script>
     <link rel="stylesheet" href="mainstyle.css">
     <meta charset="utf-8">
 </head>
@@ -17,6 +18,8 @@
                 <label>Humidity[%]:</label><input type="number" min="0" max="100" id=humidity"><br>
                 <label>Temperature{K]:</label><input type="number" min="200" max="400" id="temperature"><br>
                 <label>Pressure[Pa]:</label><input type="number" min="0" max="200000" id="pressure"><br>
+                <label>Ground Level[m]:</label><input type="number" min="-1" max="200000" id="ground_level"><br>
+            </p>
             </p>
                 Wind[m/s]:<br>
             <p>
@@ -84,12 +87,31 @@
     <div id="addTarget" class="modal">
 
       <!-- Modal content -->
-      <div class="modal-content">
+      <div class="modal-content" style="color:black">
         <span class="close">&times;</span>
-        <p>Some text in the Modal..</p>
+         <div id="myDIV" class="header">
+        <h2>Targets:</h2>
+             <input type="number" id="tnumber" placeholder="Number"><br>
+             <input type="number" id="tsx" placeholder="sx">
+             <input type="number" id="tsy" placeholder="sy">
+             <input type="number" id="tsz" placeholder="sz"><br>
+             <input type="number" id="tvx" placeholder="vx">
+             <input type="number" id="tvy" placeholder="vy">
+             <input type="number" id="tvz" placeholder="vz"><br>
+             <input type="number" id="tvmax" placeholder="vmax"><br>
+             <input type="number" id="tax" placeholder="ax">
+             <input type="number" id="tay" placeholder="ay">
+             <input type="number" id="taz" placeholder="az"><br>
+        <span onclick="newElement()" class="addBtn">Add</span>
+        </div>
+
+        <ul id="myUL">
+        <li>Hit the gym</li>
+        </ul>
       </div>
 
     </div>
+    <script src="targets.js"></script>
     <script src="plot.js"></script>
     <script src="modal.js"></script>
     <script src="saveConfig.js"></script>
