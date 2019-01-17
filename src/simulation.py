@@ -89,7 +89,6 @@ if __name__ == "__main__":
                 global_time += delta_time
                 if ticks % steer_step == 0:
                     rocket.steer(global_time, counter_velocity)
-
                 write_record(rocket, output)
                 if rocket.position[1] < ground_level:
                     output.write("MISS\n")
