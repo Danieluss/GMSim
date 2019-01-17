@@ -1,8 +1,8 @@
 var btn = document.getElementById("save");
 
-var timestep = document.getElementById("time-step");
-var steerstep = document.getElementById("steer-step");
-var savestep = document.getElementById("save-step");
+var time_step = document.getElementById("time-step");
+var steer_step = document.getElementById("steer-step");
+var save_step = document.getElementById("save-step");
 var humidity = document.getElementById("humidity");
 var temperature = document.getElementById("temperature");
 var pressure = document.getElementById("pressure");
@@ -44,9 +44,9 @@ btn.onclick = function()
     eel.save_config(
         {
             simulation: {
-                timestep: timestep.value,
-                steerstep: steerstep.value,
-                savesteo: savestep.value,
+                time_step: time_step.value,
+                steer_step: steer_step.value,
+                save_step: save_step.value,
                 humidity: humidity.value,
                 temperature: temperature.value,
                 pressure: pressure.value,
