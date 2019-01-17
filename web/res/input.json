@@ -14,9 +14,9 @@
   "rocket" : {
     "flight_control" : {
       "altitude" : null,
-      "proportional_regulation" : 1,
-      "differential_regulation" : 1,
-      "max_thrust_angle" : 0.01,
+      "proportional_regulation" : 0.5,
+      "differential_regulation" : 0,
+      "max_thrust_angle" : 0.005,
       "react_angle" : 0.01,
       "start_steer" : 1,
       "start_dive" : 0
@@ -34,8 +34,8 @@
       "front" : 0.05,
       "side" : 0.15},
     "surface" : {
-      "side" : 1.0,
-      "front" : 0.1
+      "length" : 2,
+      "width" : 0.1
     },
     "thrust" : {
       "f0" : 100,
@@ -53,10 +53,24 @@
     },
     "1" : {
       "radius": 10,
-      "s": [0, 20, 0],
+      "s": [1000, 1000, 0],
       "s.": [0, 0, 0],
-      "s.max": 5,
-      "s..": [-10, 0, 0]
+      "s.max": null,
+      "s..": [0, 0, 0]
+    },
+    "2" : {
+      "radius": 10,
+      "s": [0, 1000, 0],
+      "s.": [0, 0, 0],
+      "s.max": null,
+      "s..": [0, 0, 0]
+    },
+    "3" : {
+      "radius": 10,
+      "s": [0, 0, 0],
+      "s.": [0, 0, 0],
+      "s.max": null,
+      "s..": [0, 0, 0]
     }
   }
 
