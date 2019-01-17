@@ -84,9 +84,9 @@ class Rocket(SimplePhysicsObject):
         self.inertia = square(self.length) / 12 * self.current_mass
 
     def torque_drag(self):
-        if vector_length(self.torque) == 0:
+        if vector_length(self.rotational_velocity) == 0:
             return 0
-        return opposite_vector(self.torque) / vector_length(self.torque) * \
+        return opposite_vector(self.rotational_velocity) / vector_length(self.rotational_velocity) * \
                0.5 * (vector_length(self.rotational_velocity) ** 2) * \
                ((self.length / 2) ** 2) * \
                self.drag_coefficient_side * \
@@ -226,10 +226,6 @@ class Rocket(SimplePhysicsObject):
             else:
                 self.thrust_direction = self.direction
             self.previous_dis_dir_angle = alpha_steer
-
-    # def toJSON(self):  # goes crazy with numpy
-    #     return json.dumps(self, default=lambda o: o.__dict__,
-    #                       sort_keys=True, indent=4)
 
 
 class Target(SimplePhysicsObject):

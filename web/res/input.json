@@ -15,9 +15,9 @@
     "flight_control" : {
       "altitude" : null,
       "proportional_regulation" : 1,
-      "differential_regulation" : 1,
+      "differential_regulation" : 0,
       "max_thrust_angle" : 0.05,
-      "react_angle" : 0.01,
+      "react_angle" : 0.05,
       "start_steer" : 1,
       "start_dive" : 0
     },
