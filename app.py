@@ -1,9 +1,10 @@
 import eel
+from src import simulation
 eel.init('web')
 
 @eel.expose
 def start_sim():
-    print("ok")
+    simulation.run()
 
 
 @eel.expose

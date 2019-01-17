@@ -7,7 +7,7 @@ def write_record(rocket, output):
     output.write("\n")
 
 
-if __name__ == "__main__":
+def run():
     json_data = open("../web/res/input.json").read()
     data = json.loads(json_data)
     with open("../web/out/output.csv", "w+") as output:
