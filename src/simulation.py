@@ -29,8 +29,10 @@ def run():
             rocket.direction = rotate_towards(vec, [0.0, 1.0, 0.0], rd['direction']['angle'])
         rocket.start_position = np.asarray([0, 0, 0])
         rds = rd['surface']
-        rocket.side_surface = rds['side']
-        rocket.front_surface = rds['front']
+        rocket.length = rds['length']
+        rocket.width = rds['width']
+        rocket.side_surface = rocket.length * rocket.width
+        rocket.front_surface = np.pi * (rocket.width/2)**2
         rocket.thrust_direction = rocket.direction.copy()
         rdt = rd['thrust']
         rocket.thrust = rdt['f0']
@@ -88,7 +90,7 @@ def run():
                     target_.update(delta_time)
                 global_time += delta_time
                 if ticks % steer_step == 0:
-                    rocket.steer(global_time, counter_velocity)
+                    rocket.steer(delta_time, global_time, counter_velocity)
                 write_record(rocket, output)
                 if rocket.position[1] < ground_level:
                     output.write("MISS\n")

@@ -193,7 +193,7 @@ class Rocket(SimplePhysicsObject):
                 1 - ((self.mass - self.current_mass) / self.fuel_mass) * self.thrust_change)
         return acc
 
-    def steer(self, global_time, counter_velocity):
+    def steer(self, delta_time, global_time, counter_velocity):
         if self.target != None and self.start_steer_time < global_time:
             distance_vector = self.target.position - self.position
             if self.dive is not None and vector_length(
