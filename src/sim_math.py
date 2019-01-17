@@ -6,6 +6,8 @@ def square(f):
 
 
 def rotation_matrix(axis, theta):
+    if theta == 0.0 or vector_length(axis) == 0.0:
+        return np.eye(3, 3)
     axis = axis / np.sqrt(np.dot(axis, axis))
     a = np.cos(theta / 2.0)
     b, c, d = -axis * np.sin(theta / 2.0)

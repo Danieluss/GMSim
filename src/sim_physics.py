@@ -220,9 +220,10 @@ class Rocket(SimplePhysicsObject):
                     rotate_angle += add_angle
                 if rotate_angle > self.max_thrust_angle:
                     rotate_angle = self.max_thrust_angle
-                self.thrust_direction = rotate_towards(self.direction, dir_steer,
-                                                       -rotate_angle)
-                self.thrust_direction = self.thrust_direction / vector_length(self.thrust_direction)
+                if rotate_angle != 0:
+                    self.thrust_direction = rotate_towards(self.direction, dir_steer,
+                                                           -rotate_angle)
+                    self.thrust_direction = self.thrust_direction / vector_length(self.thrust_direction)
             else:
                 self.thrust_direction = self.direction
             self.previous_dis_dir_angle = alpha_steer
