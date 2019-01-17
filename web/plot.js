@@ -139,3 +139,9 @@ Plotly.d3.csv('out/output.csv', function(err, rows){
     //});
 });
 
+eel.expose(redraw)
+function redraw(){
+    Plotly.react('graph',{
+        data: [trace0/*,trace1*/],
+        layout: layout});
+};

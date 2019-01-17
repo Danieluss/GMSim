@@ -8,9 +8,9 @@ def write_record(rocket, output):
 
 
 def run():
-    json_data = open("../web/res/input.json").read()
+    json_data = open("web/res/input.json").read()
     data = json.loads(json_data)
-    with open("../web/out/output.csv", "w+") as output:
+    with open("web/out/output.csv", "w+") as output:
         output.write("x,y,z,color\n")
         rocket = Rocket()
         rd = data['rocket']
