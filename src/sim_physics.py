@@ -213,8 +213,11 @@ class Rocket(SimplePhysicsObject):
                 dir_steer = distance_vector
 
             if alpha_steer > self.react_angle:
-                rotate_angle = (alpha_steer * self.proportional_regulation + (
-                        alpha_steer - self.previous_dis_dir_angle) * self.differential_regulation)
+                rotate_angle = (alpha_steer * self.proportional_regulation)
+                add_angle = (
+                        alpha_steer - self.previous_dis_dir_angle) * self.differential_regulation
+                if add_angle > 0:
+                    rotate_angle += add_angle
                 if rotate_angle > self.max_thrust_angle:
                     rotate_angle = self.max_thrust_angle
                 self.thrust_direction = rotate_towards(self.direction, dir_steer,

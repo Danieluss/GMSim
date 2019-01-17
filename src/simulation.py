@@ -3,7 +3,7 @@ import json
 
 
 def write_record(rocket, output):
-    output.write(str(rocket.position[0])+","+str(rocket.position[1])+","+str(rocket.position[2]) + "," + "0")
+    output.write(str(rocket.position[0]) + "," + str(rocket.position[1]) + "," + str(rocket.position[2]) + "," + "0")
     output.write("\n")
 
 
@@ -32,7 +32,7 @@ def run():
         rocket.length = rds['length']
         rocket.width = rds['width']
         rocket.side_surface = rocket.length * rocket.width
-        rocket.front_surface = np.pi * (rocket.width/2)**2
+        rocket.front_surface = np.pi * (rocket.width / 2) ** 2
         rocket.thrust_direction = rocket.direction.copy()
         rdt = rd['thrust']
         rocket.thrust = rdt['f0']
@@ -96,7 +96,9 @@ def run():
                     output.write("MISS\n")
                     ground_hit = True
                     break
-                elif segment_sphere_intersection(pos, rocket.position, rocket.target.position, rocket.target.radius) or distance(rocket.target.position, rocket.position) <= rocket.target.radius:
+                elif segment_sphere_intersection(pos, rocket.position, rocket.target.position,
+                                                 rocket.target.radius) or distance(rocket.target.position,
+                                                                                   rocket.position) <= rocket.target.radius:
                     output.write("HIT\n")
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
@@ -104,3 +106,6 @@ def run():
                     output.write("MISS\n")
                     break
                 ticks += 1
+
+if __name__ == "__main__":
+    run()
