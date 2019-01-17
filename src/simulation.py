@@ -38,9 +38,9 @@ if __name__ == "__main__":
         rocket.thrust_change = rdt['change']
         sdt = data['simulation']
         counter_velocity = sdt['counter_velocity']
-        delta_time = sdt['time-step']
-        steer_step = sdt['steer-step']
-        save_step = sdt['save-step']
+        delta_time = sdt['time_step']
+        steer_step = sdt['steer_step']
+        save_step = sdt['save_step']
         ground_level = sdt['ground_level']
         ground_hit = False
         rocket.humidity = sdt['humidity']
