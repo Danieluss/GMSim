@@ -2,13 +2,13 @@
   "simulation" : {
     "time_step" : 0.005,
     "steer_step" : 1,
-    "save_step" : 100,
+    "save_step" : 200,
     "humidity" : 0.5,
     "temperature" : 293,
     "pressure" : 101325,
     "wind" : [0, 0, 0],
     "counter_velocity" : true,
-    "ground_level" : -1
+    "ground_level" : -1000
   },
 
   "rocket" : {
@@ -55,8 +55,8 @@
       "radius": 10,
       "s": [0, 20, 0],
       "s.": [0, 0, 0],
-      "s.max": null,
-      "s..": [0, 0, 0]
+      "s.max": 5,
+      "s..": [-10, 0, 0]
     }
   }
 

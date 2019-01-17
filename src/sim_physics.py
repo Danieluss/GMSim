@@ -39,9 +39,9 @@ class SimplePhysicsObject:
     def update(self, time):
         self.position = self.position + self.velocity * time + self.acceleration * square(time) * 0.5
         self.velocity = self.velocity + self.acceleration * time
-        # if self.max_velocity is not None:
-        #     if self.max_velocity <= vector_length(self.velocity):
-        #         self.velocity = self.velocity * (self.max_velocity / vector_length(self.velocity))
+        if self.max_velocity != None:
+            if self.max_velocity <= vector_length(self.velocity):
+                self.velocity = self.velocity * (self.max_velocity / vector_length(self.velocity))
 
 
 class Rocket(SimplePhysicsObject):
