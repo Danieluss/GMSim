@@ -227,10 +227,6 @@ class Rocket(SimplePhysicsObject):
                 self.thrust_direction = self.direction
             self.previous_dis_dir_angle = alpha_steer
 
-    # def toJSON(self):  # goes crazy with numpy
-    #     return json.dumps(self, default=lambda o: o.__dict__,
-    #                       sort_keys=True, indent=4)
-
 
 class Target(SimplePhysicsObject):
     def __init__(self):
