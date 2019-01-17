@@ -1,8 +1,8 @@
 {
   "simulation" : {
-    "time-step" : 0.005,
-    "steer-step" : 1,
-    "save-step" : 200,
+    "time_step" : 0.005,
+    "steer_step" : 1,
+    "save_step" : 200,
     "humidity" : 0.5,
     "temperature" : 293,
     "pressure" : 101325,
@@ -13,13 +13,13 @@
 
   "rocket" : {
     "flight_control" : {
-      "altitude" : 100,
+      "altitude" : null,
       "proportional_regulation" : 1,
       "differential_regulation" : 1,
       "max_thrust_angle" : 0.01,
       "react_angle" : 0.01,
       "start_steer" : 1,
-      "start_dive" : 100
+      "start_dive" : 0
     },
     "mass" : {
       "total" : 1,
