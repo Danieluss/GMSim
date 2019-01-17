@@ -1,8 +1,8 @@
 {
   "simulation" : {
-    "time-step" : 0.005,
-    "steer-step" : 1,
-    "save-step" : 10,
+    "time_step" : 0.005,
+    "steer_step" : 1,
+    "save_step" : 10,
     "humidity" : 0.5,
     "temperature" : 293,
     "pressure" : 101325,

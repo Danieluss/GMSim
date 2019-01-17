@@ -132,7 +132,7 @@ Plotly.d3.csv('out/output.csv', function(err, rows){
     };
 
     Plotly.plot('graph',{
-        data: [trace0,trace1],
+        data: [trace0/*,trace1*/],
         layout: layout,
     })//.then(function(){
         //Plotly.addFrames('graph',frames)
