@@ -17,7 +17,7 @@
       "proportional_regulation" : 1,
       "differential_regulation" : 0,
       "max_thrust_angle" : 0.05,
-      "react_angle" : 0.05,
+      "react_angle" : 0.03,
       "start_steer" : 1,
       "start_dive" : 0
     },
@@ -46,7 +46,7 @@
   "targets" : {
     "0" : {
       "radius": 10,
-      "s": [0, 1000, 0],
+      "s": [1000, 100, 0],
       "s.": [0, 0, 0],
       "s.max": null,
       "s..": [0, 0, 0]

@@ -79,18 +79,23 @@ function redraw() {
 
         var layout = {
             height: 640,
-            xaxis: {
-                range: [Math.min(Math.min(x), Math.min(y), Math.min(z)), Math.max(Math.max(x), Math.max(y), Math.max(z))],
-                label: "OX"
-            },
-            yaxis: {
-                range: [Math.min(Math.min(x), Math.min(y), Math.min(z)), Math.max(Math.max(x), Math.max(y), Math.max(z))],
-                label: "OZ"
-            },
-            zaxis: {
-                range: [Math.min(Math.min(x), Math.min(y), Math.min(z)), Math.max(Math.max(x), Math.max(y), Math.max(z))],
-                label: "OY"
-            },
+            scene: {
+                xaxis: {
+                    title: "OX",
+                    autorange: false,
+                    range: [1000, -1000]
+                },
+                yaxis: {
+                    autorange: false,
+                    title: "OZ",
+                    range: [-1000, 1000],
+                },
+                zaxis: {
+                    title: "OY",
+                    autorange: false,
+                    range: [-1000, 1000]
+                }
+            }
 
             /*updatemenus: [{
                 x: 0,
@@ -133,10 +138,13 @@ function redraw() {
                 steps: sliderSteps
             }]*/
         };
+        const min = (x, y) => x < y ? x : y ;
+        const max = (x, y) => x > y ? x : y ;
+        alert(x.reduce(max));
 
         Plotly.plot('graph', {
             data: [trace0/*,trace1*/],
-            layout: layout,
+            layout: layout
         })//.then(function(){
         //Plotly.addFrames('graph',frames)
         //});
