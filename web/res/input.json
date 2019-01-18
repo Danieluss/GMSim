@@ -6,7 +6,7 @@
     "humidity" : 0.5,
     "temperature" : 293,
     "pressure" : 101325,
-    "wind" : [10, 0, 0],
+    "wind" : [-10, 0, 0],
     "counter_velocity" : true,
     "ground_level" : -1000
   },
