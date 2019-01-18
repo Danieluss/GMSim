@@ -11,7 +11,10 @@ L = 0.0065
 
 
 def pressure_falloff(pressure, height, temperature, moll_mass):
-    return pressure * (1 - (L * height) / temperature) ** ((g * moll_mass) / (R_g * L))
+    r = pressure * (1 - (L * height) / temperature) ** ((g * moll_mass) / (R_g * L))
+    if np.isnan(r):
+        return 0
+    return r
 
 
 def saturation_water_pressure(temperature):
