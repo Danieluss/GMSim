@@ -43,8 +43,8 @@ btn.onclick = function() {
         document.getElementById("front").value = result.rocket.drag_coefficient.front;
         document.getElementById("side").value = result.rocket.drag_coefficient.side;
 
-        document.getElementById("fronts").value = result.rocket.surface.front;
-        document.getElementById("sides").value = result.rocket.surface.side;
+        document.getElementById("lengths").value = result.rocket.surface.length;
+        document.getElementById("widths").value = result.rocket.surface.width;
 
         document.getElementById("f0").value = result.rocket.thrust.f0;
         document.getElementById("thrustchange").value = result.rocket.thrust.change;

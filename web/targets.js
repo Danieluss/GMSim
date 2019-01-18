@@ -13,22 +13,25 @@ for (i = 0; i < myNodelist.length; i++) {
 var close = document.getElementsByClassName("close");
 var i;
 for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
+  close[i].onclick = console.log("dupa").then(function()
+  {
     var div = this.parentElement;
     div.style.display = "none";
     eel.remove_target(i);
-  }
+  });
 }
 
-/*
+
 // Add a "checked" symbol when clicking on a list item
 var list = document.querySelector('ul');
 list.addEventListener('click', function(ev) {
   if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
+    ev.target.classList.display ="none";
+    eel.remove_target(ev.target.valueOf());
+
   }
 }, false);
-*/
+
 
 // Create a new list item when clicking on the "Add" button
 function newElement() {

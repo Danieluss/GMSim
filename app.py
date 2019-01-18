@@ -1,4 +1,5 @@
 import eel
+import json
 from src import simulation
 eel.init('web')
 
@@ -16,8 +17,13 @@ def add_target(target):
 
 @eel.expose
 def remove_target(targetid):
-    print("rem")
+    print(targetid)
 
+
+@eel.expose
+def save_config(obj):
+    with open('web/res/input.json', 'w') as outfile:
+        json.dump(obj, outfile)
 
 eel.start('main.html', block=False)
 

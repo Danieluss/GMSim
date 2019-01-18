@@ -1,5 +1,9 @@
 eel.expose(redraw)
 function redraw() {
+     var groundlvl;
+     $.getJSON("res/input.json", function(result) {
+         groundlvl = result.simulation.ground_level;
+         });
     Plotly.d3.csv('out/output.csv', function (err, rows) {
         function unpack(rows, key) {
             return rows.map(function (row) {
@@ -36,21 +40,13 @@ function redraw() {
         };
 
         var trace1 = {
-            type: 'scatter3d',
-            mode: 'markers',
-            x: x,
-            y: y,
-            z: z,
-            opacity: 1,
-
-            marker: {
-                size: 5,
-                color: c,
-                colorscale: "Reds",
-                cmin: -20,
-                cmax: 50
-            }
-        };
+            opacity: 0.3,
+            color: 'rgb(300,100,200)',
+            type: 'mesh3d',
+            x: [-2000,-2000,2000,2000],
+            y: [-2000,2000,2000,-2000],
+            z: [groundlvl,groundlvl,groundlvl]
+        }
 
         var frames = [];
         for (i = 0; i < x.length; i++) {
@@ -83,17 +79,17 @@ function redraw() {
                 xaxis: {
                     title: "OX",
                     autorange: false,
-                    range: [1000, -1000]
+                    range: [2000, -2000]
                 },
                 yaxis: {
                     autorange: false,
                     title: "OZ",
-                    range: [-1000, 1000],
+                    range: [-2000, 2000]
                 },
                 zaxis: {
                     title: "OY",
                     autorange: false,
-                    range: [-1000, 1000]
+                    range: [-2000, 2000]
                 }
             }
 
@@ -143,10 +139,10 @@ function redraw() {
         alert(x.reduce(max));
 
         Plotly.plot('graph', {
-            data: [trace0/*,trace1*/],
+            data: [trace0,trace1/*,trace1*/],
             layout: layout
         })//.then(function(){
         //Plotly.addFrames('graph',frames)
         //});
     });
-};
+}
