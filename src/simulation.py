@@ -2,8 +2,8 @@ from sim_physics import *
 import json
 
 
-def write_record(rocket, output):
-    output.write(str(rocket.position[0]) + "," + str(rocket.position[1]) + "," + str(rocket.position[2]) + "," + "0")
+def write_record(rocket, output, color):
+    output.write(str(rocket.position[0]) + "," + str(rocket.position[1]) + "," + str(rocket.position[2]) + "," + str(color*5))
     output.write("\n")
 
 
@@ -77,6 +77,7 @@ def run():
         global_time = 0
 
         pos = rocket.position.copy()
+        it = 0
         for target in targets:
             if ground_hit:
                 break
@@ -84,8 +85,9 @@ def run():
             ticks = 0
             rocket.start_position = rocket.position
             while True:
+                it+=1
                 if ticks % save_step == 0:
-                    write_record(rocket, output)
+                    write_record(rocket, output, it)
                 pos = rocket.position.copy()
                 rocket.update(delta_time)
                 for target_ in targets:
@@ -93,7 +95,7 @@ def run():
                 global_time += delta_time
                 if ticks % steer_step == 0:
                     rocket.steer(delta_time, global_time, counter_velocity)
-                write_record(rocket, output)
+                write_record(rocket, output, it)
                 if rocket.position[1] < ground_level:
                     output.write("MISS\n")
                     ground_hit = True
