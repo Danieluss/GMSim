@@ -50,7 +50,7 @@ function newElement() {
   var az = document.getElementById("taz");
 
   eel.add_target(inputValue,{
-      target: {
+      parseInt(1): {
           radius: parseFloat(radius.value),
           s: [parseFloat(sx.value), parseFloat(sy.value), parseFloat(sz.value)],
           v: [parseFloat(vx.value), parseFloat(vy.value), parseFloat(vz.value)],

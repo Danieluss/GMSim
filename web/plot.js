@@ -138,7 +138,7 @@ function redraw() {
         const max = (x, y) => x > y ? x : y ;
         alert(x.reduce(max));
 
-        Plotly.plot('graph', {
+        Plotly.react('graph', {
             data: [trace0,trace1/*,trace1*/],
             layout: layout
         })//.then(function(){

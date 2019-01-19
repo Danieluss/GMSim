@@ -13,10 +13,11 @@ def start_sim():
 @eel.expose
 def add_target(name, target):
     json_targets = open("web/res/targets.json").read()
-    targetin = json.loads(json_targets)
-    key = frozenset(target)
-    targetin.update({name, key})
-    print(targetin)
+    out = json.loads(json_targets)
+    out["targets"].update(target)
+    json_targets = open("web/res/targets.json", "w")
+    json.dump(out, json_targets)
+    print(out)
 
 @eel.expose
 def remove_target(targetid):
