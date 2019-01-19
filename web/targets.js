@@ -4,31 +4,28 @@ var i;
 for (i = 0; i < myNodelist.length; i++) {
   var span = document.createElement("SPAN");
   var txt = document.createTextNode("\u00D7");
-  span.className = "close";
+  span.className = "closet";
   span.appendChild(txt);
   myNodelist[i].appendChild(span);
 }
 
 // Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
+var close = document.getElementsByClassName("closet");
 var i;
-for (i = 0; i < close.length; i++) {
-  close[i].onclick = console.log("dupa").then(function()
-  {
+for (i = 0; i < close.length; i++)
+{
     var div = this.parentElement;
     div.style.display = "none";
-    eel.remove_target(i);
-  });
 }
 
 
-// Add a "checked" symbol when clicking on a list item
-var list = document.querySelector('ul');
-list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.display ="none";
-    eel.remove_target(ev.target.valueOf());
 
+// Add a "checked" symbol when clicking on a list item
+var list = document.querySelector('span');
+list.addEventListener('click', function(ev) {
+  if (ev.target.className === 'closet') {
+    eel.remove_target("dupa");
+    ev.target.classList.display ="none";
   }
 }, false);
 
@@ -81,7 +78,7 @@ function newElement() {
 
   var span = document.createElement("SPAN");
   var txt = document.createTextNode("\u00D7");
-  span.className = "close";
+  span.className = "closet";
   span.appendChild(txt);
   li.appendChild(span);
 
