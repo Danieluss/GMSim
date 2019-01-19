@@ -1,7 +1,7 @@
 var btn = document.getElementById("load");
 
 
-btn.onclick = function() {
+function load() {
     var json;
     $.getJSON("res/input.json", function(result){
         //settings = JSON.parse(json);
@@ -49,4 +49,8 @@ btn.onclick = function() {
         document.getElementById("f0").value = result.rocket.thrust.f0;
         document.getElementById("thrustchange").value = result.rocket.thrust.change;
     });
-};
+}
+
+
+document.onload = load();
+btn.onclick = load();
