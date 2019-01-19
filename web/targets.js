@@ -75,7 +75,6 @@ function newElement() {
   document.getElementById("tvx").value = 0;
   document.getElementById("tvy").value = 0;
   document.getElementById("tvz").value = 0;
-  document.getElementById("tvmax").value = 0;
   document.getElementById("tax").value = 0;
   document.getElementById("tay").value = 0;
   document.getElementById("taz").value = 0;

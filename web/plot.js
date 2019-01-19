@@ -17,6 +17,48 @@ function redraw() {
 
         var c = unpack(rows, 'color');
 
+        var maxt = 0;
+
+        for(var temp in x)
+        {
+            if(x[temp] !== 'MISS' || x[temp] !== 'HIT')
+            {
+                buff = parseFloat(x[temp]);
+                //console.log("dupa");
+                if (Math.abs(buff) > maxt) {
+                    //console.log(Math.abs(buff));
+                    maxt = Math.abs(buff);
+                }
+            }
+        }
+
+        for(var temp in y)
+        {
+            if(y[temp] !== 'MISS' || y[temp] !== 'HIT')
+            {
+                buff = parseFloat(y[temp]);
+                //console.log("dupa");
+                if (Math.abs(buff) > maxt) {
+                    //console.log(Math.abs(buff));
+                    maxt = Math.abs(buff);
+                }
+            }
+        }
+
+        for(var temp in z)
+        {
+            if(z[temp] !== 'MISS' || z[temp] !== 'HIT')
+            {
+                buff = parseFloat(z[temp]);
+                //console.log("dupa");
+                if (Math.abs(buff) > maxt) {
+                    //console.log(Math.abs(buff));
+                    maxt = Math.abs(buff);
+                }
+            }
+        }
+
+
         var trace0 = {
             type: 'scatter3d',
             mode: 'lines+markers',
@@ -46,7 +88,7 @@ function redraw() {
             x: [-2000,-2000,2000,2000],
             y: [-2000,2000,2000,-2000],
             z: [groundlvl,groundlvl,groundlvl]
-        }
+        };
 
         var frames = [];
         for (i = 0; i < x.length; i++) {
@@ -57,7 +99,6 @@ function redraw() {
                 }
             );
         }
-        ;
 
         var sliderSteps = [];
         for (i = 1; i < x.length; i++) {
@@ -71,7 +112,6 @@ function redraw() {
                 }]
             });
         }
-        ;
 
         var layout = {
             height: 640,
@@ -79,17 +119,17 @@ function redraw() {
                 xaxis: {
                     title: "OX",
                     autorange: false,
-                    range: [2000, -2000]
+                    range: [maxt*-1.0, maxt]
                 },
                 yaxis: {
                     autorange: false,
                     title: "OZ",
-                    range: [-2000, 2000]
+                    range: [maxt*-1.0, maxt]
                 },
                 zaxis: {
                     title: "OY",
                     autorange: false,
-                    range: [-2000, 2000]
+                    range: [maxt*-1.0, maxt]
                 }
             }
 
