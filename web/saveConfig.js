@@ -1,5 +1,5 @@
 var btn = document.getElementById("save");
-var start = document.getElementById("start");
+var startb = document.getElementById("start");
 
 var time_step = document.getElementById("time-step");
 var steer_step = document.getElementById("steer-step");
@@ -99,5 +99,5 @@ function start()
     eel.start_sim()
 }
 
-btn.onclick = save();
-start.onclick = start();
+btn.onclick = function(){save();};
+startb.onclick = function(){start()};
