@@ -1,4 +1,5 @@
 var btn = document.getElementById("save");
+var start = document.getElementById("start");
 
 var time_step = document.getElementById("time-step");
 var steer_step = document.getElementById("steer-step");
@@ -39,7 +40,8 @@ var width = document.getElementById("widths");
 var f0 = document.getElementById("f0");
 var thrustchange = document.getElementById("thrustchange");
 
-btn.onclick = function()
+
+function save()
 {
     eel.save_config(
         {
@@ -89,3 +91,6 @@ btn.onclick = function()
         }
     )
 }
+
+btn.onclick = save();
+start.onclick = save();
