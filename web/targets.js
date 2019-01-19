@@ -49,19 +49,13 @@ function newElement() {
   var ay = document.getElementById("tay");
   var az = document.getElementById("taz");
 
-  eel.add_target({
+  eel.add_target(inputValue,{
       target: {
-          radius: radius.value,
-          sx: sx.value,
-          sy: sy.value,
-          sz: sz.value,
-          vx: vx.value,
-          vy: vy.value,
-          vz: vz.value,
-          vmax: vmax.value,
-          ax: ax.value,
-          ay: ay.value,
-          az: az.value
+          radius: parseFloat(radius.value),
+          s: [parseFloat(sx.value), parseFloat(sy.value), parseFloat(sz.value)],
+          v: [parseFloat(vx.value), parseFloat(vy.value), parseFloat(vz.value)],
+          vmax: parseFloat(vmax.value),
+          a: [parseFloat(ax.value), parseFloat(ay.value), parseFloat(az.value)]
       }
   });
 

@@ -10,6 +10,8 @@ def write_record(rocket, output):
 def run():
     json_data = open("web/res/input.json").read()
     data = json.loads(json_data)
+    json_targets = open("web/res/targets.json").read()
+    targetin = json.loads(json_targets)
     with open("web/out/output.csv", "w+") as output:
         output.write("x,y,z,color\n")
         rocket = Rocket()
@@ -60,16 +62,16 @@ def run():
 
         rocket.init()
 
-        tdt = data['targets']
+        tdt = targetin['targets']
         targets = []
 
         for key in sorted(tdt, key=lambda x: int(x)):
             new_target = Target()
             new_target.radius = tdt[key]['radius']
             new_target.position = np.asarray(tdt[key]['s'])
-            new_target.velocity = np.asarray(tdt[key]['s.'])
-            new_target.acceleration = np.asarray(tdt[key]['s..'])
-            new_target.max_velocity = np.asarray(tdt[key]['s.max'])
+            new_target.velocity = np.asarray(tdt[key]['v'])
+            new_target.acceleration = np.asarray(tdt[key]['a'])
+            new_target.max_velocity = np.asarray(tdt[key]['vmax'])
             targets.append(new_target)
 
         global_time = 0

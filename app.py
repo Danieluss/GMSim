@@ -11,9 +11,12 @@ def start_sim():
 
 
 @eel.expose
-def add_target(target):
-    print("add")
-
+def add_target(name, target):
+    json_targets = open("web/res/targets.json").read()
+    targetin = json.loads(json_targets)
+    key = frozenset(target)
+    targetin.update({name, key})
+    print(targetin)
 
 @eel.expose
 def remove_target(targetid):
@@ -24,6 +27,7 @@ def remove_target(targetid):
 def save_config(obj):
     with open('web/res/input.json', 'w') as outfile:
         json.dump(obj, outfile)
+
 
 eel.start('main.html', block=False)
 
