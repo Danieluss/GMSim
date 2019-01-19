@@ -92,3 +92,21 @@ function newElement() {
     }
   }
 }
+
+window.onload = function ()
+{
+  //console.log("dupa");
+  $.getJSON("res/targets.json", function(result) {
+    //console.log(result);
+    //console.log(Object.keys(result.targets));
+    for(var it in result.targets)
+    {
+      var li = document.createElement("li");
+      if(result.targets.hasOwnProperty(it)) {
+        var t = document.createTextNode(it + " s: [" + result.targets[it].s+"]");
+        li.appendChild(t);
+        document.getElementById("myUL").appendChild(li);
+      }
+    }
+  });
+};
