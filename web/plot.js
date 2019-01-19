@@ -73,6 +73,7 @@ function redraw() {
             }
         }
 
+        maxt+=100;
 
         var trace0 = {
             type: 'scatter3d',
@@ -148,7 +149,7 @@ function redraw() {
 
         var layout = {
             height: 640,
-            paper_bgcolor: "#475a64",
+            paper_bgcolor: "#595959",
             legend:{
                 font:{
                     color: "#AAA"

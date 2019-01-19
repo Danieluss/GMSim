@@ -21,7 +21,7 @@ input[type="checkbox"]
     display: inline-block;
     float: left;
     color: aliceblue;
-    background-color: dimgrey;
+    background-color: #595959;
 }
 
 input[type="number"]
@@ -31,7 +31,7 @@ input[type="number"]
     font-family: Consolas;
     padding: 5px 5px;
     color: aliceblue;
-    background-color: dimgrey;
+    background-color: #595959;
     display: inline-block;
     float: left;
     padding: 2px;
@@ -43,7 +43,7 @@ input[type="number"]
 }
 
 .button {
-    background-color: dimgrey;
+    background-color: #595959;
     border: none;
     color: white;
     padding: 15px 15px;
@@ -91,12 +91,13 @@ input[type="number"]
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: #4d5550;
+  background-color: #595959;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
   color: black;
+    font-family: Consolas;
 }
 
 /* The Close Button */
@@ -143,18 +144,18 @@ ul li {
 
 /* Set all odd list items to a different color (zebra-stripes) */
 ul li:nth-child(odd) {
-  background: #f9f9f9;
+  background: #C9C9C9;
 }
 
 /* Darker background-color on hover */
 ul li:hover {
-  background: #ddd;
+  background: #C9C9C9;
 }
 
 /* When clicked on, add a background color and strike out text */
 ul li.checked {
   background: #888;
-  color: #fff;
+  color: #989898;
   text-decoration: line-through;
 }
 
@@ -205,7 +206,7 @@ ul li.checked::before {
 .addBtn {
   padding: 10px;
   width: 15%;
-  background: #d9d9d9;
+  background: #e4e4e4;
   color: #555;
   float: left;
   text-align: center;
@@ -214,7 +215,7 @@ ul li.checked::before {
   transition: 0.3s;
   border-radius: 0;
     position: relative;
-    left: 100px;
+    left: 250px;
 }
 
 .addBtn:hover {
