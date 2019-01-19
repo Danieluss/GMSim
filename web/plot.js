@@ -24,6 +24,12 @@ function redraw() {
 
         var ct = unpack(rows, 'color');
 
+        var xm = unpack(rows, 'xm');
+        var zm = unpack(rows, 'ym');
+        var ym = unpack(rows, 'zm');
+
+        var cm = unpack(rows, 'hit');
+
         var size = unpack(rows, 'colort');
 
         var maxt = 0;
@@ -70,7 +76,7 @@ function redraw() {
 
         var trace0 = {
             type: 'scatter3d',
-            mode: 'lines+markers',
+            mode: 'lines',
             x: x,
             y: y,
             z: z,
@@ -80,13 +86,6 @@ function redraw() {
                 color: c,
                 colorscale: "Viridis",
                 reversescale: false
-            },
-            marker: {
-                size: 1,
-                color: c,
-                colorscale: "Reds",
-                cmin: -20,
-                cmax: 50
             },
             name: "rocket"
         };
@@ -99,14 +98,30 @@ function redraw() {
             z: zt,
             opacity: 1,
             line: {
-                width: 15,
+                width: 6,
                 color: 200,
-                colorscale: "Greens",
+                colorscale: "Blackbody",
                 reversescale: false
             },
             name: "targets"
         };
 
+        var trace2 = {
+            type: 'scatter3d',
+            mode: '+markers',
+            x: xm,
+            y: ym,
+            z: zm,
+            opacity: 0.5,
+            marker: {
+                size: 10,
+                color: 1,
+                colorscale: "Reds",
+                cmin: -20,
+                cmax: 50
+            },
+            name: "hits"
+        };
 
         var frames = [];
         for (i = 0; i < x.length; i++) {
@@ -133,6 +148,7 @@ function redraw() {
 
         var layout = {
             height: 640,
+            paper_bgcolor: "#999",
             scene: {
                 xaxis: {
                     title: "OX",
@@ -197,7 +213,7 @@ function redraw() {
         alert(x.reduce(max));
 
         Plotly.react('graph', {
-            data: [trace0, trace1/*,trace1*/],
+            data: [trace0, trace1, trace2/*,trace1*/],
             layout: layout
         })
     })

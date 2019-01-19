@@ -13,7 +13,7 @@ def run():
     json_targets = open("web/res/targets.json").read()
     targetin = json.loads(json_targets)
     with open("web/out/output.csv", "w+") as output:
-        output.write("x,y,z,color,xt,yt,zt,colort\n")
+        output.write("x,y,z,color,xt,yt,zt,colort,xm,ym,zm,hit")
         #traces.write("x,y,z,color\n")
         #markers.write("x,y,z,size\n")
         rocket = Rocket()
@@ -90,7 +90,8 @@ def run():
                 it+=1
                 if ticks % save_step == 0:
                     write_record(rocket, output, it*5, ",")
-                    write_record(rocket.target, output, rocket.target.radius, "\n")
+                    write_record(rocket.target, output, it*5, ",")
+                    output.write("None,None,None,None\n")
                 pos = rocket.position.copy()
                 rocket.update(delta_time)
                 for target_ in targets:
@@ -99,19 +100,23 @@ def run():
                 if ticks % steer_step == 0:
                     rocket.steer(delta_time, global_time, counter_velocity)
                 write_record(rocket, output, it*5, ",")
-                write_record(rocket.target, output, rocket.target.radius, "\n")
+                write_record(rocket.target, output, it*5, ",")
+                output.write("None,None,None,None\n")
                 if rocket.position[1] < ground_level:
-                    output.write("MISS,MISS,MISS,1,None,None,None,None\n")
+                    output.write("MISS,MISS,MISS,1,None,None,None,None,")
+                    write_record(rocket.target, output, rocket.target.radius, "\n")
                     ground_hit = True
                     break
                 elif segment_sphere_intersection(pos, rocket.position, rocket.target.position,
                                                  rocket.target.radius) or distance(rocket.target.position,
                                                                                    rocket.position) <= rocket.target.radius:
-                    output.write("HIT,HIT,HIT,1,None,None,None,None\n")
+                    output.write("HIT,HIT,HIT,1,None,None,None,None,")
+                    write_record(rocket.target, output, rocket.target.radius, "\n")
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position) + rocket.target.radius:
-                    output.write("MISS,MISS,MISS,1,None,None,None,None\n")
+                    output.write("MISS,MISS,MISS,1,None,None,None,None,")
+                    write_record(rocket.target, output, rocket.target.radius, "\n")
                     break
                 ticks += 1
 
