@@ -48,16 +48,15 @@ function newElement() {
   var ax = document.getElementById("tax");
   var ay = document.getElementById("tay");
   var az = document.getElementById("taz");
-
-  eel.add_target(inputValue,{
-      parseInt(1): {
+  var new_target = { new_target: {
           radius: parseFloat(radius.value),
           s: [parseFloat(sx.value), parseFloat(sy.value), parseFloat(sz.value)],
           v: [parseFloat(vx.value), parseFloat(vy.value), parseFloat(vz.value)],
           vmax: parseFloat(vmax.value),
           a: [parseFloat(ax.value), parseFloat(ay.value), parseFloat(az.value)]
-      }
-  });
+      } };
+  json.stringify(new_target).replace;
+  eel.add_target(inputValue,new_target);
 
   var t = document.createTextNode(String(inputValue)+" s: ["+String(sx.value)+", "+String(sy.value)+", "+String(sz.value)+"]");
   li.appendChild(t);

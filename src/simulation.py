@@ -28,7 +28,7 @@ def run():
             normalize(rocket.direction)
         else:
             vec = np.asarray([1.0, 0.0, 0.0])
-            rocket.direction = rotate_towards(vec, [0.0, 1.0, 0.0], rd['direction']['angle'])
+            rocket.direction = rotate_towards(vec, [0.0, 1.0, 0.0], rd['direction']['angle'] * np.pi)
         rocket.start_position = np.asarray([0, 0, 0])
         rds = rd['surface']
         rocket.length = rds['length']
