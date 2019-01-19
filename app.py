@@ -11,7 +11,7 @@ def start_sim():
 
 
 @eel.expose
-def add_target(name, target):
+def add_target(target):
     json_targets = open("web/res/targets.json").read()
     out = json.loads(json_targets)
     out["targets"].update(target)
@@ -21,8 +21,17 @@ def add_target(name, target):
 
 @eel.expose
 def remove_target(targetid):
-    print(targetid)
-
+    target = targetid.split(" ")[0];
+    print(target)
+    json_targets = open("web/res/targets.json").read()
+    out = json.loads(json_targets)
+    try:
+        del out["targets"][target]
+    except KeyError:
+        print("Key "+target+" not found")
+    json_targets = open("web/res/targets.json", "w")
+    json.dump(out, json_targets)
+    print(out)
 
 @eel.expose
 def save_config(obj):

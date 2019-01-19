@@ -14,11 +14,9 @@ var close = document.getElementsByClassName("closet");
 var i;
 for (i = 0; i < close.length; i++)
 {
-    var div = this.parentElement;
-    div.style.display = "none";
+    var badname = this.parentElement;
+    badname.style.display = "none";
 }
-
-
 
 // Add a "checked" symbol when clicking on a list item
 var list = document.querySelector('span');
@@ -52,13 +50,11 @@ function newElement() {
           vmax: parseFloat(vmax.value),
           a: [parseFloat(ax.value), parseFloat(ay.value), parseFloat(az.value)]
       } };
-  var tstring = JSON.stringify(new_target);
-  console.log(tstring);
-  tstring = tstring.replace('new_target',inputValue);
-  console.log(tstring);
-  new_target = JSON.parse(tstring);
-  eel.add_target(inputValue,new_target);
 
+  var temp = JSON.stringify(new_target);
+  temp = temp.replace("new_target", inputValue);
+  new_target = JSON.parse(temp);
+  eel.add_target(new_target);
   var t = document.createTextNode(String(inputValue)+" s: ["+String(sx.value)+", "+String(sy.value)+", "+String(sz.value)+"]");
   li.appendChild(t);
   if (inputValue === '') {
@@ -89,8 +85,13 @@ function newElement() {
     close[i].onclick = function() {
       var div = this.parentElement;
       div.style.display = "none";
+      olek_fun(div.innerHTML)
     }
   }
+}
+
+var olek_fun = function(content) {
+  eel.remove_target(content);
 }
 
 window.onload = function ()
@@ -106,6 +107,19 @@ window.onload = function ()
         var t = document.createTextNode(it + " s: [" + result.targets[it].s+"]");
         li.appendChild(t);
         document.getElementById("myUL").appendChild(li);
+      }
+      var span = document.createElement("SPAN");
+      var txt = document.createTextNode("\u00D7");
+      span.className = "closet";
+      span.appendChild(txt);
+      li.appendChild(span);
+
+      for (i = 0; i < close.length; i++) {
+        close[i].onclick = function() {
+          var div = this.parentElement;
+          div.style.display = "none";
+          olek_fun(div.innerHTML)
+        }
       }
     }
   });
