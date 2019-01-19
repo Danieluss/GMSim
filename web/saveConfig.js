@@ -92,5 +92,12 @@ function save()
     )
 }
 
+function start()
+{
+    save();
+    console.log("started");
+    eel.start_sim()
+}
+
 btn.onclick = save();
-start.onclick = save();
+start.onclick = start();
