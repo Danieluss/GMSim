@@ -115,8 +115,8 @@ function redraw() {
             opacity: 0.5,
             marker: {
                 size: 10,
-                color: 1,
-                colorscale: "Reds",
+                color: cm,
+                //colorscale: "RdBu",
                 cmin: -20,
                 cmax: 50
             },
@@ -212,6 +212,7 @@ function redraw() {
         const max = (x, y) => x > y ? x : y ;
         alert(x.reduce(max));
 
+        console.log(trace2);
         Plotly.react('graph', {
             data: [trace0, trace1, trace2/*,trace1*/],
             layout: layout

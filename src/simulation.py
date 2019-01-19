@@ -13,7 +13,7 @@ def run():
     json_targets = open("web/res/targets.json").read()
     targetin = json.loads(json_targets)
     with open("web/out/output.csv", "w+") as output:
-        output.write("x,y,z,color,xt,yt,zt,colort,xm,ym,zm,hit")
+        output.write("x,y,z,color,xt,yt,zt,colort,xm,ym,zm,hit\n")
         #traces.write("x,y,z,color\n")
         #markers.write("x,y,z,size\n")
         rocket = Rocket()
@@ -104,19 +104,19 @@ def run():
                 output.write("None,None,None,None\n")
                 if rocket.position[1] < ground_level:
                     output.write("MISS,MISS,MISS,1,None,None,None,None,")
-                    write_record(rocket.target, output, rocket.target.radius, "\n")
+                    write_record(rocket.target, output, "#F01", "\n")
                     ground_hit = True
                     break
                 elif segment_sphere_intersection(pos, rocket.position, rocket.target.position,
                                                  rocket.target.radius) or distance(rocket.target.position,
                                                                                    rocket.position) <= rocket.target.radius:
                     output.write("HIT,HIT,HIT,1,None,None,None,None,")
-                    write_record(rocket.target, output, rocket.target.radius, "\n")
+                    write_record(rocket.target, output, "#0F1", "\n")
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position) + rocket.target.radius:
                     output.write("MISS,MISS,MISS,1,None,None,None,None,")
-                    write_record(rocket.target, output, rocket.target.radius, "\n")
+                    write_record(rocket.target, output, "#F01", "\n")
                     break
                 ticks += 1
 
