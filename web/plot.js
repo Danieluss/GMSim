@@ -4,6 +4,7 @@ function redraw() {
      $.getJSON("res/input.json", function(result) {
          groundlvl = result.simulation.ground_level;
          });
+
     Plotly.d3.csv('out/output.csv', function (err, rows) {
         function unpack(rows, key) {
             return rows.map(function (row) {
@@ -16,6 +17,14 @@ function redraw() {
         var y = unpack(rows, 'z');
 
         var c = unpack(rows, 'color');
+
+        var xt = unpack(rows, 'xt');
+        var zt = unpack(rows, 'yt');
+        var yt = unpack(rows, 'zt');
+
+        var ct = unpack(rows, 'color');
+
+        var size = unpack(rows, 'colort');
 
         var maxt = 0;
 
@@ -78,17 +87,26 @@ function redraw() {
                 colorscale: "Reds",
                 cmin: -20,
                 cmax: 50
-            }
+            },
+            name: "rocket"
         };
 
         var trace1 = {
-            opacity: 0.3,
-            color: 'rgb(300,100,200)',
-            type: 'mesh3d',
-            x: [-2000,-2000,2000,2000],
-            y: [-2000,2000,2000,-2000],
-            z: [groundlvl,groundlvl,groundlvl]
+            type: 'scatter3d',
+            mode: 'lines',
+            x: xt,
+            y: yt,
+            z: zt,
+            opacity: 1,
+            line: {
+                width: 15,
+                color: 200,
+                colorscale: "Greens",
+                reversescale: false
+            },
+            name: "targets"
         };
+
 
         var frames = [];
         for (i = 0; i < x.length; i++) {
@@ -179,10 +197,8 @@ function redraw() {
         alert(x.reduce(max));
 
         Plotly.react('graph', {
-            data: [trace0,trace1/*,trace1*/],
+            data: [trace0, trace1/*,trace1*/],
             layout: layout
-        })//.then(function(){
-        //Plotly.addFrames('graph',frames)
-        //});
-    });
+        })
+    })
 }

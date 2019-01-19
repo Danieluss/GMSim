@@ -2,9 +2,9 @@ from sim_physics import *
 import json
 
 
-def write_record(rocket, output, color):
-    output.write(str(rocket.position[0]) + "," + str(rocket.position[1]) + "," + str(rocket.position[2]) + "," + str(color*5))
-    output.write("\n")
+def write_record(rocket, output, param, delim):
+    output.write(str(rocket.position[0]) + "," + str(rocket.position[1]) + "," + str(rocket.position[2]) + "," + str(param))
+    output.write(delim)
 
 
 def run():
@@ -13,7 +13,9 @@ def run():
     json_targets = open("web/res/targets.json").read()
     targetin = json.loads(json_targets)
     with open("web/out/output.csv", "w+") as output:
-        output.write("x,y,z,color\n")
+        output.write("x,y,z,color,xt,yt,zt,colort\n")
+        #traces.write("x,y,z,color\n")
+        #markers.write("x,y,z,size\n")
         rocket = Rocket()
         rd = data['rocket']
         rdm = rd['mass']
@@ -87,7 +89,8 @@ def run():
             while True:
                 it+=1
                 if ticks % save_step == 0:
-                    write_record(rocket, output, it)
+                    write_record(rocket, output, it*5, ",")
+                    write_record(rocket.target, output, rocket.target.radius, "\n")
                 pos = rocket.position.copy()
                 rocket.update(delta_time)
                 for target_ in targets:
@@ -95,19 +98,20 @@ def run():
                 global_time += delta_time
                 if ticks % steer_step == 0:
                     rocket.steer(delta_time, global_time, counter_velocity)
-                write_record(rocket, output, it)
+                write_record(rocket, output, it*5, ",")
+                write_record(rocket.target, output, rocket.target.radius, "\n")
                 if rocket.position[1] < ground_level:
-                    output.write("MISS\n")
+                    output.write("MISS,MISS,MISS,1,None,None,None,None\n")
                     ground_hit = True
                     break
                 elif segment_sphere_intersection(pos, rocket.position, rocket.target.position,
                                                  rocket.target.radius) or distance(rocket.target.position,
                                                                                    rocket.position) <= rocket.target.radius:
-                    output.write("HIT\n")
+                    output.write("HIT,HIT,HIT,1,None,None,None,None\n")
                     break
                 elif distance(rocket.start_position, rocket.position) > distance(rocket.start_position,
                                                                                  rocket.target.position) + rocket.target.radius:
-                    output.write("MISS\n")
+                    output.write("MISS,MISS,MISS,1,None,None,None,None\n")
                     break
                 ticks += 1
 
