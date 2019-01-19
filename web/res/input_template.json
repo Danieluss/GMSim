@@ -1,4 +1,4 @@
-{
+
   "simulation" : {
     "time_step" : 0.005,
     "steer_step" : 1,
@@ -34,30 +34,12 @@
       "front" : 0.05,
       "side" : 0.15},
     "surface" : {
-      "side" : 1.0,
-      "front" : 0.1
+      "length" : 1.0,
+      "width" : 0.1
     },
     "thrust" : {
       "f0" : 100,
       "change" : 1
     }
-  },
-
-  "targets" : {
-    "0" : {
-      "radius": 10,
-      "s": [1000, 10, 0],
-      "s.": [0, 0, 0],
-      "s.max": null,
-      "s..": [0, 0, 0]
-    },
-    "1" : {
-      "radius": 10,
-      "s": [0, 20, 0],
-      "s.": [0, 0, 0],
-      "s.max": 5,
-      "s..": [-10, 0, 0]
-    }
   }
-
 }
