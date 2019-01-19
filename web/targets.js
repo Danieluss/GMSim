@@ -54,13 +54,14 @@ function newElement() {
   var temp = JSON.stringify(new_target);
   temp = temp.replace("new_target", inputValue);
   new_target = JSON.parse(temp);
-  eel.add_target(new_target);
+
   var t = document.createTextNode(String(inputValue)+" s: ["+String(sx.value)+", "+String(sy.value)+", "+String(sz.value)+"]");
   li.appendChild(t);
   if (inputValue === '') {
     alert("You must write something!");
   } else {
     document.getElementById("myUL").appendChild(li);
+    eel.add_target(new_target);
   }
   document.getElementById("tnumber").value = "";
 
