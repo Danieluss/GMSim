@@ -221,9 +221,6 @@ function redraw() {
                 steps: sliderSteps
             }]*/
         };
-        const min = (x, y) => x < y ? x : y ;
-        const max = (x, y) => x > y ? x : y ;
-        alert(x.reduce(max));
 
         console.log(trace2);
         Plotly.react('graph', {
