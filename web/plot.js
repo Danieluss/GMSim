@@ -148,22 +148,35 @@ function redraw() {
 
         var layout = {
             height: 640,
-            paper_bgcolor: "#999",
+            paper_bgcolor: "#475a64",
+            legend:{
+                font:{
+                    color: "#AAA"
+                }
+            },
             scene: {
+                aspectratio:{
+                  x: 1,
+                  y: 1,
+                  z: 1
+                },
                 xaxis: {
                     title: "OX",
                     autorange: false,
-                    range: [maxt*-1.0, maxt]
+                    range: [maxt*-1.0, maxt],
+                    color: "#AAA"
                 },
                 yaxis: {
                     autorange: false,
                     title: "OZ",
-                    range: [maxt*-1.0, maxt]
+                    range: [maxt*-1.0, maxt],
+                    color: "#AAA"
                 },
                 zaxis: {
                     title: "OY",
                     autorange: false,
-                    range: [maxt*-1.0, maxt]
+                    range: [maxt*-1.0, maxt],
+                    color: "#AAA"
                 }
             }
 
