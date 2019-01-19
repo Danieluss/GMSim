@@ -52,7 +52,11 @@ function newElement() {
           vmax: parseFloat(vmax.value),
           a: [parseFloat(ax.value), parseFloat(ay.value), parseFloat(az.value)]
       } };
-  json.stringify(new_target).replace;
+  var tstring = JSON.stringify(new_target);
+  console.log(tstring);
+  tstring = tstring.replace('new_target',inputValue);
+  console.log(tstring);
+  new_target = JSON.parse(tstring);
   eel.add_target(inputValue,new_target);
 
   var t = document.createTextNode(String(inputValue)+" s: ["+String(sx.value)+", "+String(sy.value)+", "+String(sz.value)+"]");
